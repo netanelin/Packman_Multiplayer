@@ -1,4 +1,4 @@
-package ex4_example.robot_for_gui;
+package robot_for_gui;
 
 import Coords.LatLonAlt;
 import Robot.Fruit;
