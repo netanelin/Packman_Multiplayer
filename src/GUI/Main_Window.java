@@ -22,15 +22,17 @@ import Game_Elements_For_Gui.Gui_Box;
 import Game_Elements_For_Gui.Gui_Element;
 import Game_Elements_For_Gui.Gui_Game;
 import Game_Elements_For_Gui.Gui_Map;
+import Game_Elements_For_Gui.Ratio;
 import Robot.Play;
 
 public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 	BufferedImage myImage=null;
-	private boolean senerio_active;
+	private boolean senerio_active, start_game;
 	private Play play;
 	private Gui_Map map;
 	private Gui_Game game;
+	private ArrayList<String> board_data;
 
 	public Main_Window() 
 	{
@@ -48,6 +50,8 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 		game = new Gui_Game(map);
 		myImage = game.getMap().getMyImage();
 		senerio_active = false;
+		start_game = false;
+		board_data = new ArrayList<String>();
 	}
 
 
@@ -106,7 +110,18 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 
 
-
+	private void update_board_data() {
+		board_data.clear();
+		board_data = play.getBoard();
+		for(int i=0;i<board_data.size();i++) {
+			if(board_data.get(i).charAt(0)=='B') {
+				game.addBox(new Gui_Box(board_data.get(i), map));
+			}
+			else {
+				game.addElement(new Gui_Element(board_data.get(i), map));
+			}
+		}
+	}
 
 
 
@@ -119,15 +134,8 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 				game.clearAll();
 				String file_name = "data//Ex4_OOP_example1.csv";
 				play = new Play(file_name);
-				ArrayList<String> board_data = play.getBoard();
-				for(int i=0;i<board_data.size();i++) {
-					if(board_data.get(i).charAt(0)=='B') {
-						game.addBox(new Gui_Box(board_data.get(i), map));
-					}
-					else {
-						game.addElement(new Gui_Element(board_data.get(i), map));
-					}
-				}
+				play.setIDs(205463920,311300784);
+				update_board_data();
 				repaint();
 			}
 		});		
@@ -143,15 +151,8 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 				game.clearAll();
 				String file_name = "data//Ex4_OOP_example2.csv";
 				play = new Play(file_name);
-				ArrayList<String> board_data = play.getBoard();
-				for(int i=0;i<board_data.size();i++) {
-					if(board_data.get(i).charAt(0)=='B') {
-						game.addBox(new Gui_Box(board_data.get(i), map));
-					}
-					else {
-						game.addElement(new Gui_Element(board_data.get(i), map));
-					}
-				}
+				play.setIDs(205463920,311300784);
+				update_board_data();
 				repaint();
 			}			
 		});				
@@ -167,15 +168,8 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 				game.clearAll();
 				String file_name = "data//Ex4_OOP_example3.csv";
 				play = new Play(file_name);
-				ArrayList<String> board_data = play.getBoard();
-				for(int i=0;i<board_data.size();i++) {
-					if(board_data.get(i).charAt(0)=='B') {
-						game.addBox(new Gui_Box(board_data.get(i), map));
-					}
-					else {
-						game.addElement(new Gui_Element(board_data.get(i), map));
-					}
-				}
+				play.setIDs(205463920,311300784);
+				update_board_data();
 				repaint();
 			}
 		});				
@@ -191,15 +185,8 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 				game.clearAll();
 				String file_name = "data//Ex4_OOP_example4.csv";
 				play = new Play(file_name);
-				ArrayList<String> board_data = play.getBoard();
-				for(int i=0;i<board_data.size();i++) {
-					if(board_data.get(i).charAt(0)=='B') {
-						game.addBox(new Gui_Box(board_data.get(i), map));
-					}
-					else {
-						game.addElement(new Gui_Element(board_data.get(i), map));
-					}
-				}
+				play.setIDs(205463920,311300784);
+				update_board_data();
 				repaint();
 			}
 		});				
@@ -215,15 +202,8 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 				game.clearAll();
 				String file_name = "data//Ex4_OOP_example5.csv";
 				play = new Play(file_name);
-				ArrayList<String> board_data = play.getBoard();
-				for(int i=0;i<board_data.size();i++) {
-					if(board_data.get(i).charAt(0)=='B') {
-						game.addBox(new Gui_Box(board_data.get(i), map));
-					}
-					else {
-						game.addElement(new Gui_Element(board_data.get(i), map));
-					}
-				}
+				play.setIDs(205463920,311300784);
+				update_board_data();
 				repaint();
 			}
 		});				
@@ -240,15 +220,8 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 				game.clearAll();
 				String file_name = "data//Ex4_OOP_example6.csv";
 				play = new Play(file_name);
-				ArrayList<String> board_data = play.getBoard();
-				for(int i=0;i<board_data.size();i++) {
-					if(board_data.get(i).charAt(0)=='B') {
-						game.addBox(new Gui_Box(board_data.get(i), map));
-					}
-					else {
-						game.addElement(new Gui_Element(board_data.get(i), map));
-					}
-				}
+				play.setIDs(205463920,311300784);
+				update_board_data();
 				repaint();
 			}
 		});				
@@ -264,15 +237,8 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 				game.clearAll();
 				String file_name = "data//Ex4_OOP_example7.csv";
 				play = new Play(file_name);
-				ArrayList<String> board_data = play.getBoard();
-				for(int i=0;i<board_data.size();i++) {
-					if(board_data.get(i).charAt(0)=='B') {
-						game.addBox(new Gui_Box(board_data.get(i), map));
-					}
-					else {
-						game.addElement(new Gui_Element(board_data.get(i), map));
-					}
-				}
+				play.setIDs(205463920,311300784);
+				update_board_data();
 				repaint();
 			}
 		});				
@@ -288,15 +254,8 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 				game.clearAll();
 				String file_name = "data//Ex4_OOP_example8.csv";
 				play = new Play(file_name);
-				ArrayList<String> board_data = play.getBoard();
-				for(int i=0;i<board_data.size();i++) {
-					if(board_data.get(i).charAt(0)=='B') {
-						game.addBox(new Gui_Box(board_data.get(i), map));
-					}
-					else {
-						game.addElement(new Gui_Element(board_data.get(i), map));
-					}
-				}
+				play.setIDs(205463920,311300784);
+				update_board_data();
 				repaint();
 			}
 		});				
@@ -313,15 +272,8 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 				game.clearAll();
 				String file_name = "data//Ex4_OOP_example9.csv";
 				play = new Play(file_name);
-				ArrayList<String> board_data = play.getBoard();
-				for(int i=0;i<board_data.size();i++) {
-					if(board_data.get(i).charAt(0)=='B') {
-						game.addBox(new Gui_Box(board_data.get(i), map));
-					}
-					else {
-						game.addElement(new Gui_Element(board_data.get(i), map));
-					}
-				}
+				play.setIDs(205463920,311300784);
+				update_board_data();
 				repaint();
 			}
 		});				
@@ -337,8 +289,13 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
-
+				start_game = true;
+				
+				while(start_game) {
+					if(!start_game)
+					update_board_data();
+					repaint();
+				}
 			}
 		});		
 	}
@@ -370,16 +327,19 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 	public void paint(Graphics g){
 		g.drawImage(myImage, 0, 0,getWidth()-8,getHeight()-8, this);
 
+
+
+
 		for(Gui_Box box: game.getBoxes()) {
 			Point minPixels = box.getMin_ratio().to_pixels(getWidth(), getHeight());
 			Point maxPixels = box.getMax_ratio().to_pixels(getWidth(), getHeight());
-			
+
 			g.setColor(Color.BLACK);
 			int rectWidth = maxPixels.x-minPixels.x;
 			int rectHeight = minPixels.y-maxPixels.y;
 			g.fillRect(minPixels.x, maxPixels.y, rectWidth, rectHeight);
 		}
-		
+
 		for(Gui_Element element: game.getElements()) {
 			Point Pixels = element.getRatio().to_pixels(getWidth(), getHeight());
 			g.drawImage(element.getImage(), Pixels.x, Pixels.y, getWidth()/50, getHeight()/25, this);
@@ -410,9 +370,14 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
+	public void mouseClicked(MouseEvent e) {
+		if(start_game) {
+			Ratio start = new Ratio(new Point(e.getX(),e.getY()), getWidth(), getHeight());
+			LatLonAlt start_point = start.to_latLon(map);
+			play.setInitLocation(start_point.lat(),start_point.lon());
+			start_game = false;
+		}
+		repaint();
 	}
 
 	@Override

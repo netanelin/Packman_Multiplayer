@@ -25,6 +25,12 @@ public class Ratio{
         X_Ratio = left_to_point/map_width;
         Y_Ratio = top_to_point/map_height;
     }
+    
+    
+    public Ratio (Point pixel_location, int width, int height ){
+        X_Ratio = (double)pixel_location.x/width;
+        Y_Ratio = (double)pixel_location.y/height;
+    }
 
     public Point to_pixels (int width, int height){
 
@@ -32,6 +38,18 @@ public class Ratio{
         int  y = (int)(height*Y_Ratio);
         Point p = new Point (x,y);
         return p;
+    }
+    
+    public LatLonAlt to_latLon (Gui_Map map) {
+    	double min_lat = map.getMin().x();
+		double min_lon = map.getMin().y();
+		double max_lat = map.getMax().x();
+		double max_lon = map.getMax().y();
+
+		double new_lat = min_lat + (max_lat-min_lat)*(1-Y_Ratio);
+		double new_lon = min_lon + (max_lon-min_lon)*X_Ratio;
+
+		return new LatLonAlt(new_lat, new_lon, 0);
     }
 
 }
