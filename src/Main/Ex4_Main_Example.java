@@ -51,7 +51,6 @@ public class Ex4_Main_Example {
 		// 7.1) this is the main command to the player (on the server side)
 			play1.rotate(36*i); 
 			System.out.println("***** "+i+"******");
-			
 		// 7.2) get the current score of the game
 			String info = play1.getStatistics();
 			System.out.println(info);

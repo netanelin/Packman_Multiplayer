@@ -17,6 +17,7 @@ import javax.swing.JFrame;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
+import Coords.Cords;
 import Coords.LatLonAlt;
 import Game_Elements_For_Gui.Gui_Box;
 import Game_Elements_For_Gui.Gui_Element;
@@ -28,11 +29,14 @@ import Robot.Play;
 public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 	BufferedImage myImage=null;
-	private boolean senerio_active, start_game;
+	private String game_status;
 	private Play play;
 	private Gui_Map map;
 	private Gui_Game game;
 	private ArrayList<String> board_data;
+	private String info;
+	private Point pixel_location;
+
 
 	public Main_Window() 
 	{
@@ -49,9 +53,9 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 		map= new Gui_Map(new LatLonAlt(32.101898,35.202369,0.0), new LatLonAlt(32.105728,35.212416,0.0));
 		game = new Gui_Game(map);
 		myImage = game.getMap().getMyImage();
-		senerio_active = false;
-		start_game = false;
+		game_status = "nothing";
 		board_data = new ArrayList<String>();
+		pixel_location = new Point();
 	}
 
 
@@ -62,6 +66,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 		Menu Choose_senerio = new Menu("Choose senerio");
 		Menu run = new Menu("Run");
+		Menu clear = new Menu("clear");
 
 		MenuItem senerio_1 = new MenuItem("senerio_1");
 		senerio_1(senerio_1);
@@ -89,6 +94,8 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 		menuBar.add(Choose_senerio);
 		menuBar.add(run);
+		menuBar.add(clear);
+		clear(clear);
 
 		Choose_senerio.add(senerio_1);
 		Choose_senerio.add(senerio_2);
@@ -110,7 +117,25 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 
 
+	private void clear(Menu clear) {
+		clear.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				board_data.clear();
+				game.clearAll();
+				play = null;
+				repaint();
+				game_status = "nothing";
+			}
+		});		
+	}
+
+
+
+
 	private void update_board_data() {
+		game.clearAll();
 		board_data.clear();
 		board_data = play.getBoard();
 		for(int i=0;i<board_data.size();i++) {
@@ -130,7 +155,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				senerio_active = true;
+				game_status ="senerio_active"; 
 				game.clearAll();
 				String file_name = "data//Ex4_OOP_example1.csv";
 				play = new Play(file_name);
@@ -147,7 +172,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				senerio_active = true;
+				game_status ="senerio_active";
 				game.clearAll();
 				String file_name = "data//Ex4_OOP_example2.csv";
 				play = new Play(file_name);
@@ -164,7 +189,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				senerio_active = true;
+				game_status ="senerio_active"; 
 				game.clearAll();
 				String file_name = "data//Ex4_OOP_example3.csv";
 				play = new Play(file_name);
@@ -181,7 +206,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				senerio_active = true;
+				game_status ="senerio_active"; 
 				game.clearAll();
 				String file_name = "data//Ex4_OOP_example4.csv";
 				play = new Play(file_name);
@@ -198,7 +223,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				senerio_active = true;
+				game_status ="senerio_active";
 				game.clearAll();
 				String file_name = "data//Ex4_OOP_example5.csv";
 				play = new Play(file_name);
@@ -216,7 +241,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				senerio_active = true;
+				game_status ="senerio_active"; 
 				game.clearAll();
 				String file_name = "data//Ex4_OOP_example6.csv";
 				play = new Play(file_name);
@@ -233,7 +258,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				senerio_active = true;
+				game_status ="senerio_active"; 
 				game.clearAll();
 				String file_name = "data//Ex4_OOP_example7.csv";
 				play = new Play(file_name);
@@ -250,7 +275,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				senerio_active = true;
+				game_status ="senerio_active"; 
 				game.clearAll();
 				String file_name = "data//Ex4_OOP_example8.csv";
 				play = new Play(file_name);
@@ -268,7 +293,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				senerio_active = true;
+				game_status ="senerio_active"; 
 				game.clearAll();
 				String file_name = "data//Ex4_OOP_example9.csv";
 				play = new Play(file_name);
@@ -289,14 +314,26 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				start_game = true;
-				
-				while(start_game) {
-					if(!start_game)
-					update_board_data();
-					repaint();
-				}
+				game_status = "run_game_manual";
+				//				if(game_status.equals("senerio_active"))
+				//					game_status = "";
+				//				while(player_start) {
+				//
+				//				}
+				//				play.start();
+				//				info = play.getStatistics();
+				//				System.out.println(info);
+				//				game_on = true;
+				//				while(fruits_left() && time_left())
+				//				{
+				//
+				//				}
+				//				game_on = false;
+				//				play.stop();
+				//				System.out.println("**** Done Game (user stop) ****");
+				//				repaint();
 			}
+
 		});		
 	}
 
@@ -342,7 +379,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 		for(Gui_Element element: game.getElements()) {
 			Point Pixels = element.getRatio().to_pixels(getWidth(), getHeight());
-			g.drawImage(element.getImage(), Pixels.x, Pixels.y, getWidth()/50, getHeight()/25, this);
+			g.drawImage(element.getImage(), Pixels.x-8, Pixels.y-8, getWidth()/50, getHeight()/25, this);
 		}
 	}
 
@@ -369,16 +406,100 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 	}
 
+
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if(start_game) {
-			Ratio start = new Ratio(new Point(e.getX(),e.getY()), getWidth(), getHeight());
-			LatLonAlt start_point = start.to_latLon(map);
-			play.setInitLocation(start_point.lat(),start_point.lon());
-			start_game = false;
+
+		if(game_status.equals("run_game_manual")) {
+			Ratio location = new Ratio(new Point(e.getX(),e.getY()), getWidth(), getHeight());
+			//			pixel_location = location.to_pixels(getWidth(), getHeight());
+			//			pixel_location.setLocation(e.getX(), e.getY());
+			LatLonAlt gps_location = location.to_latLon(map);
+			play.setInitLocation(gps_location.lat(),gps_location.lon());
+			play.start();
+			info = play.getStatistics();
+			System.out.println(info);
+			update_board_data();
+			repaint();
+			game_status = "location_initiated";
 		}
-		repaint();
+
+		else if(game_status.equals("location_initiated")) {
+			if(fruits_left()) {
+				int x = e.getX(), y = e.getY();
+				move_game_pieces(x, y);
+				//				pixel_location = get_pixel_location();
+				//				double angel = Cords.angXY(x-pixel_location.x, pixel_location.y-y);
+				//				System.out.println(angel);
+				//				play.rotate(angel);
+				//				info = play.getStatistics();
+				//				System.out.println(info);
+				//				update_board_data();
+				//				repaint();
+			}
+			else {
+				game_status = "end_game";
+				play.stop();
+				update_board_data();
+				System.out.println("**** Done Game (user stop) ****");
+				repaint();
+			}
+		}
 	}
+
+
+
+
+	private void move_game_pieces(int x, int y) {
+		pixel_location = get_pixel_location();
+		double angel = Cords.angXY(x-pixel_location.x, pixel_location.y-y);
+		System.out.println(angel);
+		play.rotate(angel);
+		info = play.getStatistics();
+		System.out.println(info);
+		update_board_data();
+		repaint();		
+	}
+
+
+
+
+	private Point get_pixel_location() {
+		for(Gui_Element element: game.getElements()) {
+			if(element.getElement_type()=='M') {
+				Ratio ratio = element.getRatio();
+				return ratio.to_pixels(getWidth(), getHeight());
+			}
+		}
+		return null;
+	}
+
+
+
+
+	private boolean fruits_left() {
+		update_board_data();
+		boolean fruits_left = false;
+		for(Gui_Element element: game.getElements()) {
+			if(element.getElement_type()=='F')
+				fruits_left = true;
+		}
+		return fruits_left;
+	}
+
+
+
+	//	public boolean time_left() {
+	//		String[] data = info.split(",");
+	//		double time = Double.parseDouble(data[3].substring(data[3].indexOf(':')+1));
+	//		return time>0;
+	//	}
+
+
+
+
+
+
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
@@ -391,16 +512,76 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 	}
 
-	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+	//	private boolean pressed = false;
+	//	@Override
+	//	public void mousePressed(MouseEvent e) {
+	//		// TODO Auto-generated method stub
+	//		pressed = true;
+	//		if(game_status.equals("location_initiated")) {
+	//			while(e.getButton()) {
+	//				move_game_pieces(e.getX(), e.getY());
+	//				try {
+	//					Thread.sleep(250);
+	//				} catch (InterruptedException e1) {
+	//					// TODO Auto-generated catch block
+	//					e1.printStackTrace();
+	//				}
+	//			}
+	//		}
+	//	}
+	//
+	//	@Override
+	//	public void mouseReleased(MouseEvent arg0) {
+	//		// TODO Auto-generated method stub
+	//		pressed = false;
+	//	}
 
+
+
+
+
+	volatile private boolean mouseDown = false;
+
+	public void mousePressed(MouseEvent e) {
+		if (e.getButton() == MouseEvent.BUTTON1) {
+			mouseDown = true;
+			initThread(e.getX(),e.getY());
+		}
 	}
 
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
+	public void mouseReleased(MouseEvent e) {
+		if (e.getButton() == MouseEvent.BUTTON1) {
+			mouseDown = false;
+		}
 	}
+
+	volatile private boolean isRunning = false;
+	private synchronized boolean checkAndMark() {
+		if (isRunning) return false;
+		isRunning = true;
+		return true;
+	}
+	private void initThread(int x, int y) {
+		if (checkAndMark()) {
+			new Thread() {
+				public void run() {
+					do {
+						if(game_status.equals("location_initiated")) {
+							move_game_pieces(x, y);
+							try {
+								Thread.sleep(50);
+							} catch (InterruptedException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						}
+					} while (mouseDown);
+					isRunning = false;
+				}
+			}.start();
+		}
+	}
+
+
 
 }

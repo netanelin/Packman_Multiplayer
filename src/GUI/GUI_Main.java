@@ -2,6 +2,7 @@ package GUI;
 
 import javax.swing.JFrame;
 
+import Coords.Cords;
 
 /**
  * This is a main class for activating our GUI.
@@ -20,7 +21,6 @@ public class GUI_Main
 		window.setVisible(true);
 		window.setSize(window.myImage.getWidth()-8,window.myImage.getHeight()-8);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
 	}
 }
 
