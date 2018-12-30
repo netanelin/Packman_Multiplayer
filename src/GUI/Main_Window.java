@@ -413,14 +413,21 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 		if(game_status.equals("run_game_manual")) {
 			Ratio location = new Ratio(new Point(e.getX(),e.getY()), getWidth(), getHeight());
-			LatLonAlt gps_location = location.to_latLon(map);
-			play.setInitLocation(gps_location.lat(),gps_location.lon());
-			play.start();
-			info = play.getStatistics();
-			System.out.println(info);
-			update_board_data();
-			repaint();
-			game_status = "location_initiated";
+			boolean in_box = false;
+				for(Gui_Box box: game.getBoxes()) {
+					if(box.is_in_box(location))
+						in_box = true;
+				}
+			if(!in_box) {
+				LatLonAlt gps_location = location.to_latLon(map);
+				play.setInitLocation(gps_location.lat(),gps_location.lon());
+				play.start();
+				info = play.getStatistics();
+				System.out.println(info);
+				update_board_data();
+				repaint();
+				game_status = "location_initiated";
+			}
 		}
 	}
 
@@ -464,8 +471,6 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 		}
 		return null;
 	}
-
-
 
 
 	private boolean fruits_left() {
@@ -524,7 +529,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 							if(fruits_left() && time_left()) {
 								move_game_pieces(x, y);
 								try {
-									Thread.sleep(50);
+									Thread.sleep(35);
 								} catch (InterruptedException e1) {
 									e1.printStackTrace();
 								}

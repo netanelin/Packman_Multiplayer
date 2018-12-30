@@ -20,14 +20,14 @@ public class Gui_Element {
 
 		if(element_type=='P') {
 			try {
-				image = ImageIO.read(new File("Images\\pacman_right.png"));
+				image = ImageIO.read(new File("Images\\packman.png"));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}	
 		}
 		else if(element_type=='M') {
 			try {
-				image = ImageIO.read(new File("Images\\pacman_left.png"));
+				image = ImageIO.read(new File("Images\\Me_player.png"));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}	

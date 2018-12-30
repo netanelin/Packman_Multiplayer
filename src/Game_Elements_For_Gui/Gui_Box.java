@@ -1,6 +1,5 @@
 package Game_Elements_For_Gui;
 
-import Coords.LatLonAlt;
 import Game_Elements.Box;
 
 public class Gui_Box {
@@ -12,10 +11,10 @@ public class Gui_Box {
 		min_ratio = new Ratio(box.getMin(), map);
 		max_ratio = new Ratio(box.getMax(), map);
 	}
-	
+
 	public Gui_Box(String line, Gui_Map map){
 		this(new Box(line), map);
-    }
+	}
 
 	public Ratio getMin_ratio() {
 		return min_ratio;
@@ -32,5 +31,11 @@ public class Gui_Box {
 	public void setMax_ratio(Ratio max_ratio) {
 		this.max_ratio = max_ratio;
 	}
-	
+
+	public boolean is_in_box(Ratio ratio) {
+		return ratio.getX_Ratio()>=min_ratio.getX_Ratio() && 
+				ratio.getX_Ratio()<=max_ratio.getX_Ratio() &&
+				ratio.getY_Ratio()<=min_ratio.getY_Ratio() &&
+						ratio.getY_Ratio()>=max_ratio.getY_Ratio();
+	}
 }
