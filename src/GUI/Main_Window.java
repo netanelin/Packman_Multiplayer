@@ -12,6 +12,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.JFrame;
 import javax.swing.event.MenuEvent;
@@ -36,7 +38,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 	private ArrayList<String> board_data;
 	private String info;
 	private Point pixel_location;
-
+	private final Lock lock = new ReentrantLock();
 
 	public Main_Window() 
 	{
@@ -56,6 +58,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 		game_status = "nothing";
 		board_data = new ArrayList<String>();
 		pixel_location = new Point();
+		info = new String();
 	}
 
 
@@ -66,7 +69,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 		Menu Choose_senerio = new Menu("Choose senerio");
 		Menu run = new Menu("Run");
-		Menu clear = new Menu("clear");
+		Menu clear_all = new Menu("Clear");
 
 		MenuItem senerio_1 = new MenuItem("senerio_1");
 		senerio_1(senerio_1);
@@ -92,10 +95,12 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 		MenuItem run_algorithm = new MenuItem("run algorithm");
 		run_algorithm(run_algorithm);
 
+		MenuItem clear = new MenuItem("clear");
+		clear(clear);
+
 		menuBar.add(Choose_senerio);
 		menuBar.add(run);
-		menuBar.add(clear);
-		clear(clear);
+		menuBar.add(clear_all);
 
 		Choose_senerio.add(senerio_1);
 		Choose_senerio.add(senerio_2);
@@ -111,13 +116,15 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 		run.add(run_manual);
 		run.add(run_algorithm);
 
+		clear_all.add(clear);
+
 		this.setMenuBar(menuBar);
 
 	}
 
 
 
-	private void clear(Menu clear) {
+	private void clear(MenuItem clear) {
 		clear.addActionListener(new ActionListener() {
 
 			@Override
@@ -135,16 +142,21 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 
 	private void update_board_data() {
-		game.clearAll();
-		board_data.clear();
-		board_data = play.getBoard();
-		for(int i=0;i<board_data.size();i++) {
-			if(board_data.get(i).charAt(0)=='B') {
-				game.addBox(new Gui_Box(board_data.get(i), map));
+		try {
+			lock.lock();
+			game.clearAll();
+			board_data.clear();
+			board_data = play.getBoard();
+			for(int i=0;i<board_data.size();i++) {
+				if(board_data.get(i).charAt(0)=='B') {
+					game.addBox(new Gui_Box(board_data.get(i), map));
+				}
+				else {
+					game.addElement(new Gui_Element(board_data.get(i), map));
+				}
 			}
-			else {
-				game.addElement(new Gui_Element(board_data.get(i), map));
-			}
+		} finally {
+			lock.unlock();
 		}
 	}
 
@@ -314,24 +326,8 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				game_status = "run_game_manual";
-				//				if(game_status.equals("senerio_active"))
-				//					game_status = "";
-				//				while(player_start) {
-				//
-				//				}
-				//				play.start();
-				//				info = play.getStatistics();
-				//				System.out.println(info);
-				//				game_on = true;
-				//				while(fruits_left() && time_left())
-				//				{
-				//
-				//				}
-				//				game_on = false;
-				//				play.stop();
-				//				System.out.println("**** Done Game (user stop) ****");
-				//				repaint();
+				if(game_status.equals("senerio_active"))
+					game_status = "run_game_manual";
 			}
 
 		});		
@@ -376,11 +372,16 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 			int rectHeight = minPixels.y-maxPixels.y;
 			g.fillRect(minPixels.x, maxPixels.y, rectWidth, rectHeight);
 		}
-
-		for(Gui_Element element: game.getElements()) {
-			Point Pixels = element.getRatio().to_pixels(getWidth(), getHeight());
-			g.drawImage(element.getImage(), Pixels.x-8, Pixels.y-8, getWidth()/50, getHeight()/25, this);
+		try {
+			lock.lock();
+			for(Gui_Element element: game.getElements()) {
+				Point Pixels = element.getRatio().to_pixels(getWidth(), getHeight());
+				g.drawImage(element.getImage(), Pixels.x-8, Pixels.y-8, getWidth()/50, getHeight()/25, this);
+			}
+		} finally {
+			lock.unlock();
 		}
+
 	}
 
 
@@ -412,8 +413,6 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 		if(game_status.equals("run_game_manual")) {
 			Ratio location = new Ratio(new Point(e.getX(),e.getY()), getWidth(), getHeight());
-			//			pixel_location = location.to_pixels(getWidth(), getHeight());
-			//			pixel_location.setLocation(e.getX(), e.getY());
 			LatLonAlt gps_location = location.to_latLon(map);
 			play.setInitLocation(gps_location.lat(),gps_location.lon());
 			play.start();
@@ -423,28 +422,16 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 			repaint();
 			game_status = "location_initiated";
 		}
+	}
 
-		else if(game_status.equals("location_initiated")) {
-			if(fruits_left()) {
-				int x = e.getX(), y = e.getY();
-				move_game_pieces(x, y);
-				//				pixel_location = get_pixel_location();
-				//				double angel = Cords.angXY(x-pixel_location.x, pixel_location.y-y);
-				//				System.out.println(angel);
-				//				play.rotate(angel);
-				//				info = play.getStatistics();
-				//				System.out.println(info);
-				//				update_board_data();
-				//				repaint();
-			}
-			else {
-				game_status = "end_game";
-				play.stop();
-				update_board_data();
-				System.out.println("**** Done Game (user stop) ****");
-				repaint();
-			}
-		}
+
+
+
+	private boolean time_left() {
+		String[] data = info.split(",");
+		String time_string = data[3].substring(data[3].indexOf(':')+1);
+		double time = Double.parseDouble(time_string);
+		return time>100;
 	}
 
 
@@ -453,7 +440,6 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 	private void move_game_pieces(int x, int y) {
 		pixel_location = get_pixel_location();
 		double angel = Cords.angXY(x-pixel_location.x, pixel_location.y-y);
-		System.out.println(angel);
 		play.rotate(angel);
 		info = play.getStatistics();
 		System.out.println(info);
@@ -465,11 +451,16 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 
 	private Point get_pixel_location() {
-		for(Gui_Element element: game.getElements()) {
-			if(element.getElement_type()=='M') {
-				Ratio ratio = element.getRatio();
-				return ratio.to_pixels(getWidth(), getHeight());
+		try {
+			lock.lock();
+			for(Gui_Element element: game.getElements()) {
+				if(element.getElement_type()=='M') {
+					Ratio ratio = element.getRatio();
+					return ratio.to_pixels(getWidth(), getHeight());
+				}
 			}
+		} finally {
+			lock.unlock();
 		}
 		return null;
 	}
@@ -480,26 +471,17 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 	private boolean fruits_left() {
 		update_board_data();
 		boolean fruits_left = false;
-		for(Gui_Element element: game.getElements()) {
-			if(element.getElement_type()=='F')
-				fruits_left = true;
+		try {
+			lock.lock();
+			for(Gui_Element element: game.getElements()) {
+				if(element.getElement_type()=='F')
+					fruits_left = true;
+			}
+		} finally {
+			lock.unlock();
 		}
 		return fruits_left;
 	}
-
-
-
-	//	public boolean time_left() {
-	//		String[] data = info.split(",");
-	//		double time = Double.parseDouble(data[3].substring(data[3].indexOf(':')+1));
-	//		return time>0;
-	//	}
-
-
-
-
-
-
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
@@ -511,34 +493,6 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 		// TODO Auto-generated method stub
 
 	}
-
-	//	private boolean pressed = false;
-	//	@Override
-	//	public void mousePressed(MouseEvent e) {
-	//		// TODO Auto-generated method stub
-	//		pressed = true;
-	//		if(game_status.equals("location_initiated")) {
-	//			while(e.getButton()) {
-	//				move_game_pieces(e.getX(), e.getY());
-	//				try {
-	//					Thread.sleep(250);
-	//				} catch (InterruptedException e1) {
-	//					// TODO Auto-generated catch block
-	//					e1.printStackTrace();
-	//				}
-	//			}
-	//		}
-	//	}
-	//
-	//	@Override
-	//	public void mouseReleased(MouseEvent arg0) {
-	//		// TODO Auto-generated method stub
-	//		pressed = false;
-	//	}
-
-
-
-
 
 	volatile private boolean mouseDown = false;
 
@@ -567,12 +521,23 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 				public void run() {
 					do {
 						if(game_status.equals("location_initiated")) {
-							move_game_pieces(x, y);
-							try {
-								Thread.sleep(50);
-							} catch (InterruptedException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
+							if(fruits_left() && time_left()) {
+								move_game_pieces(x, y);
+								try {
+									Thread.sleep(50);
+								} catch (InterruptedException e1) {
+									e1.printStackTrace();
+								}
+							}
+							else {
+								game_status = "end_game";
+								play.stop();
+								board_data.clear();
+								game.clearAll();
+								play = null;
+								repaint();
+								game_status = "nothing";
+								System.out.println("**** Game Over! ****");
 							}
 						}
 					} while (mouseDown);
@@ -581,7 +546,4 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 			}.start();
 		}
 	}
-
-
-
 }
