@@ -59,7 +59,9 @@ public class Game {
 		return boxes;
 	}
 
-	
+//	public boolean cuts_a_box() {
+//		
+//	}
 	
 	
 }

@@ -7,11 +7,12 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import Coords.LatLonAlt;
+import Ratio.Ratio_Point;
 
 public class Element {
 
 	private char element_type;
-	private Ratio ratio;
+	private Ratio_Point ratio;
 	private BufferedImage image;
 	
 	public Element (String line, Map map){
@@ -19,7 +20,7 @@ public class Element {
 	        element_type = data[0].charAt(0);
 	       LatLonAlt gps_point = new LatLonAlt(Double.parseDouble(data[2]),Double.parseDouble(data[3]),0);
 	       
-			ratio = new Ratio(gps_point , map);
+			ratio = new Ratio_Point(gps_point , map);
 
 			if(element_type=='P') {
 				try {
@@ -44,7 +45,7 @@ public class Element {
 			}
 			else if(element_type=='F') {
 				try {
-					image = ImageIO.read(new File("Images\\3d_cherry.png"));
+					image = ImageIO.read(new File("Images\\3d_strawberry.png"));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}	
@@ -57,7 +58,7 @@ public class Element {
 		return element_type;
 	}
 
-	public Ratio getRatio() {
+	public Ratio_Point getRatio() {
 		return ratio;
 	}
 

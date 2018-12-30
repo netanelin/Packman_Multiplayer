@@ -25,7 +25,7 @@ import Game_Elements.Box;
 import Game_Elements.Element;
 import Game_Elements.Game;
 import Game_Elements.Map;
-import Game_Elements.Ratio;
+import Ratio.Ratio_Point;
 import Robot.Play;
 
 public class Main_Window extends JFrame implements MouseListener, MenuListener {
@@ -412,7 +412,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 	public void mouseClicked(MouseEvent e) {
 
 		if(game_status.equals("run_game_manual")) {
-			Ratio location = new Ratio(new Point(e.getX(),e.getY()), getWidth(), getHeight());
+			Ratio_Point location = new Ratio_Point(new Point(e.getX(),e.getY()), getWidth(), getHeight());
 			boolean in_box = false;
 				for(Box box: game.getBoxes()) {
 					if(box.is_in_box(location))
@@ -462,7 +462,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 			lock.lock();
 			for(Element element: game.getElements()) {
 				if(element.getElement_type()=='M') {
-					Ratio ratio = element.getRatio();
+					Ratio_Point ratio = element.getRatio();
 					return ratio.to_pixels(getWidth(), getHeight());
 				}
 			}
