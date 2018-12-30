@@ -1,4 +1,4 @@
-package Game_Elements_For_Gui;
+package Game_Elements;
 
 import Coords.LatLonAlt;
 
@@ -15,7 +15,7 @@ public class Ratio{
         return Y_Ratio;
     }
 
-    public Ratio (LatLonAlt location, Gui_Map map ){
+    public Ratio (LatLonAlt location, Map map ){
         double map_width = map.getMax().lon()-map.getMin().lon();
         double left_to_point = location.lon()-map.getMin().lon();
 
@@ -40,7 +40,7 @@ public class Ratio{
         return p;
     }
     
-    public LatLonAlt to_latLon (Gui_Map map) {
+    public LatLonAlt to_latLon (Map map) {
     	double min_lat = map.getMin().x();
 		double min_lon = map.getMin().y();
 		double max_lat = map.getMax().x();

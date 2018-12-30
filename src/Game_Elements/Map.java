@@ -1,4 +1,4 @@
-package Game_Elements_For_Gui;
+package Game_Elements;
 
 import Coords.LatLonAlt;
 
@@ -8,13 +8,13 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class Gui_Map {
+public class Map {
 
 	private BufferedImage myImage;
     private LatLonAlt min;
     private LatLonAlt max;
 
-    public Gui_Map(LatLonAlt min, LatLonAlt max){
+    public Map(LatLonAlt min, LatLonAlt max){
         try {
             myImage = ImageIO.read(new File("Images\\ariel_university.jpg"));
         } catch (IOException e) {
@@ -22,6 +22,12 @@ public class Gui_Map {
         }
         this.min = new LatLonAlt(min);
         this.max = new LatLonAlt(max);
+    }
+    
+    public Map(Map ot) {
+    	min = new LatLonAlt(ot.min);
+    	max = new LatLonAlt(max);
+    	myImage = ot.myImage;
     }
 
     public LatLonAlt getMin() {

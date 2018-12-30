@@ -2,13 +2,20 @@ package Algo;
 
 import java.util.ArrayList;
 
-import Coords.LatLonAlt;
+import Game_Elements.Game;
+import Game_Elements.Ratio;
 
 public class Path {
 
-	private ArrayList<LatLonAlt> gps_points;
+	private ArrayList<Ratio> points;
+	private Game game;
 	
-	public Path() {
-		gps_points = new ArrayList<LatLonAlt>();
+	public Path(Game game) {
+		points = new ArrayList<Ratio>();
+		game = new Game(game);
+	}
+	
+	public void run_algo() {
+		
 	}
 }

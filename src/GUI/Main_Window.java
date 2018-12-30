@@ -21,11 +21,11 @@ import javax.swing.event.MenuListener;
 
 import Coords.Cords;
 import Coords.LatLonAlt;
-import Game_Elements_For_Gui.Gui_Box;
-import Game_Elements_For_Gui.Gui_Element;
-import Game_Elements_For_Gui.Gui_Game;
-import Game_Elements_For_Gui.Gui_Map;
-import Game_Elements_For_Gui.Ratio;
+import Game_Elements.Box;
+import Game_Elements.Element;
+import Game_Elements.Game;
+import Game_Elements.Map;
+import Game_Elements.Ratio;
 import Robot.Play;
 
 public class Main_Window extends JFrame implements MouseListener, MenuListener {
@@ -33,8 +33,8 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 	BufferedImage myImage=null;
 	private String game_status;
 	private Play play;
-	private Gui_Map map;
-	private Gui_Game game;
+	private Map map;
+	private Game game;
 	private ArrayList<String> board_data;
 	private String info;
 	private Point pixel_location;
@@ -52,8 +52,8 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 	private void initGUI() 
 	{
 		initMENU();
-		map= new Gui_Map(new LatLonAlt(32.101898,35.202369,0.0), new LatLonAlt(32.105728,35.212416,0.0));
-		game = new Gui_Game(map);
+		map= new Map(new LatLonAlt(32.101898,35.202369,0.0), new LatLonAlt(32.105728,35.212416,0.0));
+		game = new Game(map);
 		myImage = game.getMap().getMyImage();
 		game_status = "nothing";
 		board_data = new ArrayList<String>();
@@ -149,10 +149,10 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 			board_data = play.getBoard();
 			for(int i=0;i<board_data.size();i++) {
 				if(board_data.get(i).charAt(0)=='B') {
-					game.addBox(new Gui_Box(board_data.get(i), map));
+					game.addBox(new Box(board_data.get(i), map));
 				}
 				else {
-					game.addElement(new Gui_Element(board_data.get(i), map));
+					game.addElement(new Element(board_data.get(i), map));
 				}
 			}
 		} finally {
@@ -363,7 +363,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 
 
-		for(Gui_Box box: game.getBoxes()) {
+		for(Box box: game.getBoxes()) {
 			Point minPixels = box.getMin_ratio().to_pixels(getWidth(), getHeight());
 			Point maxPixels = box.getMax_ratio().to_pixels(getWidth(), getHeight());
 
@@ -374,7 +374,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 		}
 		try {
 			lock.lock();
-			for(Gui_Element element: game.getElements()) {
+			for(Element element: game.getElements()) {
 				Point Pixels = element.getRatio().to_pixels(getWidth(), getHeight());
 				g.drawImage(element.getImage(), Pixels.x-8, Pixels.y-8, getWidth()/50, getHeight()/25, this);
 			}
@@ -414,7 +414,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 		if(game_status.equals("run_game_manual")) {
 			Ratio location = new Ratio(new Point(e.getX(),e.getY()), getWidth(), getHeight());
 			boolean in_box = false;
-				for(Gui_Box box: game.getBoxes()) {
+				for(Box box: game.getBoxes()) {
 					if(box.is_in_box(location))
 						in_box = true;
 				}
@@ -460,7 +460,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 	private Point get_pixel_location() {
 		try {
 			lock.lock();
-			for(Gui_Element element: game.getElements()) {
+			for(Element element: game.getElements()) {
 				if(element.getElement_type()=='M') {
 					Ratio ratio = element.getRatio();
 					return ratio.to_pixels(getWidth(), getHeight());
@@ -478,7 +478,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 		boolean fruits_left = false;
 		try {
 			lock.lock();
-			for(Gui_Element element: game.getElements()) {
+			for(Element element: game.getElements()) {
 				if(element.getElement_type()=='F')
 					fruits_left = true;
 			}
