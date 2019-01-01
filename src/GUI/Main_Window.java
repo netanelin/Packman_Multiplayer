@@ -17,8 +17,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import javax.swing.JFrame;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
+
+import Algo.Path;
 import Coords.Cords;
-import Coords.LatLonAlt;
 import Game_Elements.Box;
 import Game_Elements.Element;
 import Game_Elements.Fruit;
@@ -27,8 +28,10 @@ import Game_Elements.Ghost;
 import Game_Elements.Map;
 import Game_Elements.Me_player;
 import Game_Elements.Packman;
-import Ratio.Ratio_Point;
+import Coords.LatLonAlt;
+import Ratio.Ratio_point;
 import Robot.Play;
+import Algo.Algorithm;
 
 public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
@@ -53,7 +56,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 	private void initGUI() 
 	{
 		initMENU();
-		map= new Map(new LatLonAlt(32.101898,35.202369,0.0), new LatLonAlt(32.105728,35.212416,0.0));
+		map= new Map(new Coords.LatLonAlt(32.101898,35.202369,0.0), new Coords.LatLonAlt(32.105728,35.212416,0.0));
 		game = new Game(map);
 		myImage = game.getMap().getMyImage();
 		game_status = "nothing";
@@ -303,8 +306,19 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
 
+				while(game.fruits_left()){
+					Path path = Algorithm.run(game);
+					for(LatLonAlt point : path.getPoints()){
+						boolean arrived = false;
+						while(!arrived){
+							Point p = game.get_me_location().to_pixels(getWidth(), getHeight());
+							pixel_location = get_pixel_location();
+							double angle = Cords.angXY(p.x-pixel_location.x, pixel_location.y-p.y);
+							play.rotate(angle);
+						}
+					}
+				}
 			}
 		});		
 	}
@@ -313,6 +327,8 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 	public void paint(Graphics g){
 		g.drawImage(myImage, 0, 0,getWidth()-8,getHeight()-8, this);
 
+		try {
+			lock.lock();
 		for(Box box: game.getBoxes()) {
 			Point minPixels = box.getMin_ratio().to_pixels(getWidth(), getHeight());
 			Point maxPixels = box.getMax_ratio().to_pixels(getWidth(), getHeight());
@@ -322,8 +338,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 			int rectHeight = minPixels.y-maxPixels.y;
 			g.fillRect(minPixels.x, maxPixels.y, rectWidth, rectHeight);
 		}
-		try {
-			lock.lock();
+
 			for(Element element: game.getElements()) {
 				Point Pixels = element.getRatio().to_pixels(getWidth(), getHeight());
 				g.drawImage(element.getImage(), Pixels.x-8, Pixels.y-8, getWidth()/50, getHeight()/25, this);
@@ -350,14 +365,14 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 	public void mouseClicked(MouseEvent e) {
 
 		if(game_status.equals("run_game_manual")) {
-			Ratio_Point location = new Ratio_Point(new Point(e.getX(),e.getY()), getWidth(), getHeight());
+			Ratio_point location = new Ratio_point(new Point(e.getX(),e.getY()), getWidth(), getHeight());
 			boolean in_box = false;
 				for(Box box: game.getBoxes()) {
 					if(box.is_in_box(location))
 						in_box = true;
 				}
 			if(!in_box) {
-				LatLonAlt gps_location = location.to_latLon(map);
+				Coords.LatLonAlt gps_location = location.to_latLon(map);
 				play.setInitLocation(gps_location.lat(),gps_location.lon());
 				play.start();
 				info = play.getStatistics();
@@ -380,8 +395,8 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 	private void move_game_pieces(int x, int y) {
 		pixel_location = get_pixel_location();
-		double angel = Cords.angXY(x-pixel_location.x, pixel_location.y-y);
-		play.rotate(angel);
+		double angle = Cords.angXY(x-pixel_location.x, pixel_location.y-y);
+		play.rotate(angle);
 		info = play.getStatistics();
 		System.out.println(info);
 		update_board_data();
@@ -394,7 +409,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 			lock.lock();
 			for(Element element: game.getElements()) {
 				if(element instanceof Me_player) {
-					Ratio_Point ratio = element.getRatio();
+					Ratio_point ratio = element.getRatio();
 					return ratio.to_pixels(getWidth(), getHeight());
 				}
 			}
@@ -404,21 +419,6 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 		return null;
 	}
 
-
-	private boolean fruits_left() {
-		update_board_data();
-		boolean fruits_left = false;
-		try {
-			lock.lock();
-			for(Element element: game.getElements()) {
-				if(element instanceof Fruit)
-					fruits_left = true;
-			}
-		} finally {
-			lock.unlock();
-		}
-		return fruits_left;
-	}
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
@@ -457,7 +457,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 				public void run() {
 					do {
 						if(game_status.equals("location_initiated")) {
-							if(fruits_left() && time_left()) {
+							if(game.fruits_left() && time_left()) {
 								move_game_pieces(x, y);
 								try {
 									Thread.sleep(35);
@@ -467,12 +467,6 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 							}
 							else {
 								move_game_pieces(x, y);
-								try {
-									Thread.sleep(35);
-								} catch (InterruptedException e1) {
-									e1.printStackTrace();
-								}
-								game_status = "end_game";
 								info = play.getStatistics();
 								System.out.println("**** Game Over! ****\n" + "End game: " + info);
 								play.stop();

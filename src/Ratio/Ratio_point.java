@@ -1,11 +1,10 @@
 package Ratio;
 
-import Coords.LatLonAlt;
 import Game_Elements.Map;
 
 import java.awt.*;
 
-public class Ratio_Point{
+public class Ratio_point {
     private  double X_Ratio, Y_Ratio;
 
     public double getX_Ratio() {
@@ -16,7 +15,7 @@ public class Ratio_Point{
         return Y_Ratio;
     }
 
-    public Ratio_Point (LatLonAlt location, Map map ){
+    public Ratio_point(Coords.LatLonAlt location, Map map ){
         double map_width = map.getMax().lon()-map.getMin().lon();
         double left_to_point = location.lon()-map.getMin().lon();
 
@@ -27,12 +26,12 @@ public class Ratio_Point{
         Y_Ratio = top_to_point/map_height;
     }
     
-    public Ratio_Point(Ratio_Point ot) {
+    public Ratio_point(Ratio_point ot) {
     	X_Ratio = ot.X_Ratio;
     	Y_Ratio = ot.Y_Ratio;
     }
     
-    public Ratio_Point (Point pixel_location, int width, int height ){
+    public Ratio_point(Point pixel_location, int width, int height ){
         X_Ratio = (double)pixel_location.x/width;
         Y_Ratio = (double)pixel_location.y/height;
     }
@@ -45,7 +44,7 @@ public class Ratio_Point{
         return p;
     }
     
-    public LatLonAlt to_latLon (Map map) {
+    public Coords.LatLonAlt to_latLon (Map map) {
     	double min_lat = map.getMin().x();
 		double min_lon = map.getMin().y();
 		double max_lat = map.getMax().x();
@@ -54,7 +53,7 @@ public class Ratio_Point{
 		double new_lat = min_lat + (max_lat-min_lat)*(1-Y_Ratio);
 		double new_lon = min_lon + (max_lon-min_lon)*X_Ratio;
 
-		return new LatLonAlt(new_lat, new_lon, 0);
+		return new Coords.LatLonAlt(new_lat, new_lon, 0);
     }
 
 }

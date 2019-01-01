@@ -1,5 +1,7 @@
 package Game_Elements;
 
+import Ratio.Ratio_point;
+
 import java.util.ArrayList;
 
 public class Game {
@@ -23,7 +25,27 @@ public class Game {
 			boxes.add(box);
 		}
 	}
-	
+
+	public boolean fruits_left() {
+		boolean fruits_left = false;
+
+			for(Element element: elements) {
+				if(element instanceof Fruit)
+					fruits_left = true;
+			}
+
+		return fruits_left;
+	}
+
+	public Ratio_point get_me_location(){
+
+		for(Element element: elements) {
+			if(element instanceof Me_player)
+				return element.getRatio();
+		}
+		return null;
+	}
+
 	public void addElement(Element element) {
 		elements.add(element);
 	}
@@ -35,12 +57,10 @@ public class Game {
 	public void clearElements() {
 		elements.clear();
 	}
-
 	
 	public void clearBoxes() {
 		boxes.clear();
 	}
-	
 	
 	public void clearAll() {
 		elements.clear();
@@ -59,9 +79,4 @@ public class Game {
 		return boxes;
 	}
 
-//	public boolean cuts_a_box() {
-//		
-//	}
-	
-	
 }

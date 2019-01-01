@@ -6,19 +6,18 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import Coords.LatLonAlt;
-import Ratio.Ratio_Point;
+import Ratio.Ratio_point;
 
 public class Ghost implements Element{
 	
-	private Ratio_Point ratio;
+	private Ratio_point ratio;
 	private BufferedImage image;
 	
 	public Ghost (String line, Map map){
 		 String[] data = line.split(",");
-	       LatLonAlt gps_point = new LatLonAlt(Double.parseDouble(data[2]),Double.parseDouble(data[3]),0);
+	       Coords.LatLonAlt gps_point = new Coords.LatLonAlt(Double.parseDouble(data[2]),Double.parseDouble(data[3]),0);
 	       
-			ratio = new Ratio_Point(gps_point , map);
+			ratio = new Ratio_point(gps_point , map);
 			
 			try {
 				image = ImageIO.read(new File("Images\\ghost.png"));
@@ -29,7 +28,7 @@ public class Ghost implements Element{
 	}
 
 	@Override
-	public Ratio_Point getRatio() {
+	public Ratio_point getRatio() {
 		return ratio;
 	}
 
