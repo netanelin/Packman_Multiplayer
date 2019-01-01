@@ -32,6 +32,7 @@ import Robot.Play;
 
 public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
+	private static final long serialVersionUID = -4858247425376916779L;
 	BufferedImage myImage=null;
 	private String game_status;
 	private Play play;
@@ -172,18 +173,25 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 		return null;
 	}
 	
+	
+	private void senerio_update(String input) {
+	game_status ="senerio_active"; 
+	game.clearAll();
+	String file_name = input;
+	play = new Play(file_name);
+	play.setIDs(205463920,311300784);
+	update_board_data();
+	repaint();
+	}
+	
+	
+	
 	private void senerio_1(MenuItem senerio_1) {
 		senerio_1.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				game_status ="senerio_active"; 
-				game.clearAll();
-				String file_name = "data//Ex4_OOP_example1.csv";
-				play = new Play(file_name);
-				play.setIDs(205463920,311300784);
-				update_board_data();
-				repaint();
+				senerio_update("data//Ex4_OOP_example1.csv");
 			}
 		});		
 	}
@@ -194,13 +202,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				game_status ="senerio_active";
-				game.clearAll();
-				String file_name = "data//Ex4_OOP_example2.csv";
-				play = new Play(file_name);
-				play.setIDs(205463920,311300784);
-				update_board_data();
-				repaint();
+				senerio_update("data//Ex4_OOP_example2.csv");
 			}			
 		});				
 	}
@@ -211,13 +213,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				game_status ="senerio_active"; 
-				game.clearAll();
-				String file_name = "data//Ex4_OOP_example3.csv";
-				play = new Play(file_name);
-				play.setIDs(205463920,311300784);
-				update_board_data();
-				repaint();
+				senerio_update("data//Ex4_OOP_example3.csv");
 			}
 		});				
 	}
@@ -228,13 +224,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				game_status ="senerio_active"; 
-				game.clearAll();
-				String file_name = "data//Ex4_OOP_example4.csv";
-				play = new Play(file_name);
-				play.setIDs(205463920,311300784);
-				update_board_data();
-				repaint();
+				senerio_update("data//Ex4_OOP_example4.csv");
 			}
 		});				
 	}
@@ -245,13 +235,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				game_status ="senerio_active";
-				game.clearAll();
-				String file_name = "data//Ex4_OOP_example5.csv";
-				play = new Play(file_name);
-				play.setIDs(205463920,311300784);
-				update_board_data();
-				repaint();
+				senerio_update("data//Ex4_OOP_example5.csv");
 			}
 		});				
 	}
@@ -262,13 +246,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				game_status ="senerio_active"; 
-				game.clearAll();
-				String file_name = "data//Ex4_OOP_example6.csv";
-				play = new Play(file_name);
-				play.setIDs(205463920,311300784);
-				update_board_data();
-				repaint();
+				senerio_update("data//Ex4_OOP_example6.csv");
 			}
 		});				
 	}
@@ -279,13 +257,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				game_status ="senerio_active"; 
-				game.clearAll();
-				String file_name = "data//Ex4_OOP_example7.csv";
-				play = new Play(file_name);
-				play.setIDs(205463920,311300784);
-				update_board_data();
-				repaint();
+				senerio_update("data//Ex4_OOP_example7.csv");
 			}
 		});				
 	}
@@ -296,13 +268,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				game_status ="senerio_active"; 
-				game.clearAll();
-				String file_name = "data//Ex4_OOP_example8.csv";
-				play = new Play(file_name);
-				play.setIDs(205463920,311300784);
-				update_board_data();
-				repaint();
+				senerio_update("data//Ex4_OOP_example8.csv");
 			}
 		});				
 	}
@@ -313,13 +279,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				game_status ="senerio_active"; 
-				game.clearAll();
-				String file_name = "data//Ex4_OOP_example9.csv";
-				play = new Play(file_name);
-				play.setIDs(205463920,311300784);
-				update_board_data();
-				repaint();
+				senerio_update("data//Ex4_OOP_example9.csv");
 			}
 		});				
 	}
@@ -467,7 +427,6 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 
 	}
 

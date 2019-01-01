@@ -11,13 +11,11 @@ import Ratio.Ratio_Point;
 
 public class Me_player implements Element{
 	
-//	private char element_type;
 	private Ratio_Point ratio;
 	private BufferedImage image;
 	
 	public Me_player (String line, Map map){
 		 String[] data = line.split(",");
-//	        element_type = data[0].charAt(0);
 	       LatLonAlt gps_point = new LatLonAlt(Double.parseDouble(data[2]),Double.parseDouble(data[3]),0);
 	       
 			ratio = new Ratio_Point(gps_point , map);
@@ -30,21 +28,13 @@ public class Me_player implements Element{
 			
 	}
 
-//	@Override
-//	public char getElement_type() {
-//		// TODO Auto-generated method stub
-//		return element_type;
-//	}
-
 	@Override
 	public Ratio_Point getRatio() {
-		// TODO Auto-generated method stub
 		return ratio;
 	}
 
 	@Override
 	public BufferedImage getImage() {
-		// TODO Auto-generated method stub
 		return image;
 	}
 	
