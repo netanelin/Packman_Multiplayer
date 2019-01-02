@@ -15,6 +15,12 @@ public class Ratio_Point {
         return Y_Ratio;
     }
 
+    
+    public Ratio_Point (double x_ratio, double y_ratio) {
+    	X_Ratio = x_ratio;
+    	Y_Ratio = y_ratio;
+    }
+    
     public Ratio_Point(Coords.LatLonAlt location, Map map ){
         double map_width = map.getMax().lon()-map.getMin().lon();
         double left_to_point = location.lon()-map.getMin().lon();

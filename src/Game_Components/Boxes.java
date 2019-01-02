@@ -3,6 +3,7 @@ package Game_Components;
 import java.util.ArrayList;
 
 import Ratio.Ratio_Point;
+import Ratio.Ratio_Segment;
 
 public class Boxes {
 	
@@ -32,6 +33,12 @@ public class Boxes {
 		return false;
 	}
 	
-	
+	public boolean intersect(Ratio_Segment seg) {
+		for(Box box : box_list) {
+			if(box.intersect(seg))
+				return true;
+		}
+		return false;
+	}
 	
 }
