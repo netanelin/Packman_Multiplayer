@@ -1,5 +1,6 @@
 package Game_Components;
 
+import Ratio.Ratio_Edge;
 import Ratio.Ratio_Point;
 
 public class Box {
@@ -37,5 +38,11 @@ public class Box {
 				ratio.getX_Ratio()<=max_ratio.getX_Ratio() &&
 				ratio.getY_Ratio()<=min_ratio.getY_Ratio() &&
 						ratio.getY_Ratio()>=max_ratio.getY_Ratio();
+	}
+	
+	public boolean touches_edge(Ratio_Edge edge) {
+		
+		return false;
+		
 	}
 }

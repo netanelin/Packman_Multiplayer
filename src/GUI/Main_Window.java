@@ -467,12 +467,12 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 							}
 							else {
 								move_game_pieces(x, y);
+								game_status = "nothing";
 								info = play.getStatistics();
-								System.out.println("**** Game Over! ****\n" + "End game: " + info);
 								play.stop();
+								System.out.println("**** Game Over! ****\n" + "End game: " + info);
 								clear();
 								repaint();
-								game_status = "nothing";
 							}
 						}
 					} while (mouseDown);

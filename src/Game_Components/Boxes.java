@@ -2,6 +2,8 @@ package Game_Components;
 
 import java.util.ArrayList;
 
+import Ratio.Ratio_Point;
+
 public class Boxes {
 	
 	private ArrayList<Box> box_list;
@@ -21,5 +23,15 @@ public class Boxes {
 	public ArrayList<Box> getBox_list() {
 		return box_list;
 	}
+	
+	public boolean is_in_boxes(Ratio_Point ratio) {
+		for(Box box : box_list) {
+			if(box.is_in_box(ratio))
+				return true;
+		}
+		return false;
+	}
+	
+	
 	
 }
