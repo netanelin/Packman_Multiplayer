@@ -1,4 +1,4 @@
-package Game_Elements;
+package Game_Components;
 
 import Coords.LatLonAlt;
 

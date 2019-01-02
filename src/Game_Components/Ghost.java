@@ -1,4 +1,4 @@
-package Game_Elements;
+package Game_Components;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -6,21 +6,21 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import Ratio.Ratio_point;
+import Ratio.Ratio_Point;
 
-public class Packman implements Element{
+public class Ghost implements Element{
 	
-	private Ratio_point ratio;
+	private Ratio_Point ratio;
 	private BufferedImage image;
 	
-	public Packman (String line, Map map){
+	public Ghost (String line, Map map){
 		 String[] data = line.split(",");
 	       Coords.LatLonAlt gps_point = new Coords.LatLonAlt(Double.parseDouble(data[2]),Double.parseDouble(data[3]),0);
 	       
-			ratio = new Ratio_point(gps_point , map);
+			ratio = new Ratio_Point(gps_point , map);
 			
 			try {
-				image = ImageIO.read(new File("Images\\packman.png"));
+				image = ImageIO.read(new File("Images\\ghost.png"));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}	
@@ -28,7 +28,7 @@ public class Packman implements Element{
 	}
 
 	@Override
-	public Ratio_point getRatio() {
+	public Ratio_Point getRatio() {
 		return ratio;
 	}
 
@@ -36,4 +36,5 @@ public class Packman implements Element{
 	public BufferedImage getImage() {
 		return image;
 	}
+	
 }

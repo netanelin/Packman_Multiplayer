@@ -1,10 +1,10 @@
 package Ratio;
 
-import Game_Elements.Map;
-
 import java.awt.*;
 
-public class Ratio_point {
+import Game_Components.Map;
+
+public class Ratio_Point {
     private  double X_Ratio, Y_Ratio;
 
     public double getX_Ratio() {
@@ -15,7 +15,7 @@ public class Ratio_point {
         return Y_Ratio;
     }
 
-    public Ratio_point(Coords.LatLonAlt location, Map map ){
+    public Ratio_Point(Coords.LatLonAlt location, Map map ){
         double map_width = map.getMax().lon()-map.getMin().lon();
         double left_to_point = location.lon()-map.getMin().lon();
 
@@ -26,12 +26,12 @@ public class Ratio_point {
         Y_Ratio = top_to_point/map_height;
     }
     
-    public Ratio_point(Ratio_point ot) {
+    public Ratio_Point(Ratio_Point ot) {
     	X_Ratio = ot.X_Ratio;
     	Y_Ratio = ot.Y_Ratio;
     }
     
-    public Ratio_point(Point pixel_location, int width, int height ){
+    public Ratio_Point(Point pixel_location, int width, int height ){
         X_Ratio = (double)pixel_location.x/width;
         Y_Ratio = (double)pixel_location.y/height;
     }

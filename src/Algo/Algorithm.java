@@ -1,16 +1,16 @@
 package Algo;
 
-import Game_Elements.Element;
-import Game_Elements.Fruit;
-import Game_Elements.Game;
+import Game_Components.Element;
+import Game_Components.Fruit;
+import Game_Components.Game;
 
 public class Algorithm {
 
     public static Path run(Game game){
-        for(Element element : game.getElements())
+        for(Element element : game.getElement_List())
             if(element instanceof Fruit){
               //TODO create Boxes and Elements objects and write the diagstra algo
             }
-        return path;
+        return null;
     }
 }
