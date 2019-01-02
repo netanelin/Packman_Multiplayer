@@ -1,28 +1,25 @@
 package Game_Components;
 
-import Ratio.Ratio_Point;
-
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class Game {
 
 	private Map map;
-	private Element_List elements;
-	private Box_List boxes;
+	private Elements elements;
+	private Boxes boxes;
 
 	public Game(Map m) {
 		map = new Map(m.getMin(), m.getMax());
-		elements = new Element_List();
-		boxes = new Box_List();
+		elements = new Elements();
+		boxes = new Boxes();
 	}
 	
 	public Game(Game ot) {
 		map = new Map(ot.map);
-		for(Element element: ot.elements.getElements()) {
+		for(Element element: ot.elements.getElement_list()) {
 			elements.add(element);
 		}
-		for(Box box: ot.boxes.getBoxes()) {
+		for(Box box: ot.boxes.getBox_list()) {
 			boxes.add(box);
 		}
 	}
@@ -53,18 +50,18 @@ public class Game {
 	}
 
 	public ArrayList<Element> getElement_List() {
-		return elements.getElements();
+		return elements.getElement_list();
 	}
 
 	public ArrayList<Box> getBox_List() {
-		return boxes.getBoxes();
+		return boxes.getBox_list();
 	}
 
-	public Element_List getElements() {
+	public Elements getElements() {
 		return elements;
 	}
 
-	public Box_List getBoxes() {
+	public Boxes getBoxes() {
 		return boxes;
 	}
 

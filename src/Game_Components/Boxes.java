@@ -1,0 +1,25 @@
+package Game_Components;
+
+import java.util.ArrayList;
+
+public class Boxes {
+	
+	private ArrayList<Box> box_list;
+	
+	public Boxes() {
+		box_list = new ArrayList<Box>();
+	}
+	
+	public void add(Box box) {
+		box_list.add(box);
+	}
+	
+	public void clear() {
+		box_list.clear();
+	}
+
+	public ArrayList<Box> getBox_list() {
+		return box_list;
+	}
+	
+}

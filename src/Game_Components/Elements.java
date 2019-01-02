@@ -1,34 +1,33 @@
 package Game_Components;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import Ratio.Ratio_Point;
 
-public class Element_List {
+public class Elements {
 	
-	private ArrayList<Element> elements;
+	private ArrayList<Element> element_list;
 	
-	public Element_List() {
-		elements = new ArrayList<Element>();
+	public Elements() {
+		element_list = new ArrayList<Element>();
 	}
 	
 	public void add(Element element) {
-		elements.add(element);
+		element_list.add(element);
 	}
 	
 	public void clear() {
-		elements.clear();
+		element_list.clear();
 	}
 
-	public ArrayList<Element> getElements() {
-		return elements;
+	public ArrayList<Element> getElement_list() {
+		return element_list;
 	}
 	
 	public boolean fruits_left() {
 		boolean fruits_left = false;
 
-			for(Element element: elements) {
+			for(Element element: element_list) {
 				if(element instanceof Fruit)
 					fruits_left = true;
 			}
@@ -38,14 +37,11 @@ public class Element_List {
 
 	public Ratio_Point get_me_location(){
 
-		for(Element element: elements) {
+		for(Element element: element_list) {
 			if(element instanceof Me_player)
 				return element.getRatio();
 		}
 		return null;
 	}
 	
-	public Iterator<Element> iterator(){
-		return elements.iterator();
-	}
 }
