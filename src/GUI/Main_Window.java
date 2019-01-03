@@ -330,8 +330,8 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 		try {
 			lock.lock();
 		for(Box box: game.getBox_List()) {
-			Point minPixels = box.getMin_ratio().to_pixels(getWidth(), getHeight());
-			Point maxPixels = box.getMax_ratio().to_pixels(getWidth(), getHeight());
+			Point minPixels = box.getBottom_left().to_pixels(getWidth(), getHeight());
+			Point maxPixels = box.getTop_right().to_pixels(getWidth(), getHeight());
 
 			g.setColor(Color.BLACK);
 			int rectWidth = maxPixels.x-minPixels.x;

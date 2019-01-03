@@ -18,6 +18,11 @@ public class Path {
 			}catch(Exception e){
 				}
 		}
+		points.add(locations.get(locations.size()-1));
+	}
+
+	public Path(LatLonAlt fruit_location){
+		points.add(fruit_location);
 	}
 
 	public ArrayList<LatLonAlt> getPoints() {

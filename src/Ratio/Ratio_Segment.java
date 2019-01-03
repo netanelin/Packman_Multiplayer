@@ -1,7 +1,5 @@
 package Ratio;
 
-import java.awt.geom.Point2D;
-
 public class Ratio_Segment {
 
 	private Ratio_Point point1;
@@ -28,7 +26,6 @@ public class Ratio_Segment {
 		this.point2 = point2;
 	}
 
-
 	public boolean intersect(Ratio_Segment ot) {
 
 		Ratio_Line_Equation e1 = new Ratio_Line_Equation(point1, point2);
@@ -39,11 +36,16 @@ public class Ratio_Segment {
 		double x = intersection.getX_Ratio();
 		double y = intersection.getY_Ratio();
 
-		
-		return x<=Math.max(this.point1.getX_Ratio(), this.point2.getX_Ratio()) &&
-		x>=Math.min(this.point1.getX_Ratio(), this.point2.getX_Ratio()) &&
-		y<=Math.max(this.point1.getY_Ratio(), this.point2.getY_Ratio()) &&
-		y>=Math.min(this.point1.getY_Ratio(), this.point2.getY_Ratio());
+		//check whether the intersection point is on both segments
+		boolean intersect = x<=Math.max(this.point1.getX_Ratio(), this.point2.getX_Ratio()) &&
+							x>=Math.min(this.point1.getX_Ratio(), this.point2.getX_Ratio()) &&
+							y<=Math.max(this.point1.getY_Ratio(), this.point2.getY_Ratio()) &&
+							y>=Math.min(this.point1.getY_Ratio(), this.point2.getY_Ratio()) &&
+							x<=Math.max(ot.point1.getX_Ratio(), ot.point2.getX_Ratio()) &&
+							x>=Math.min(ot.point1.getX_Ratio(), ot.point2.getX_Ratio()) &&
+							y<=Math.max(ot.point1.getY_Ratio(), ot.point2.getY_Ratio()) &&
+							y>=Math.min(ot.point1.getY_Ratio(), ot.point2.getY_Ratio());
 
+		return intersect;
 	}
 }
