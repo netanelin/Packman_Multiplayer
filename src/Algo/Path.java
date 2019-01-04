@@ -22,6 +22,7 @@ public class Path {
 	}
 
 	public Path(LatLonAlt fruit_location){
+		points = new ArrayList<LatLonAlt>();
 		points.add(fruit_location);
 	}
 

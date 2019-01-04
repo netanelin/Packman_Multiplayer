@@ -172,23 +172,23 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 			return new Fruit(line, map);
 		else if(type == 'G')
 			return new Ghost(line, map);
-		
+
 		return null;
 	}
-	
-	
+
+
 	private void senerio_update(String input) {
-	game_status ="senerio_active"; 
-	game.clearAll();
-	String file_name = input;
-	play = new Play(file_name);
-	play.setIDs(205463920,311300784);
-	update_board_data();
-	repaint();
+		game_status ="senerio_active"; 
+		game.clearAll();
+		String file_name = input;
+		play = new Play(file_name);
+		play.setIDs(205463920,311300784);
+		update_board_data();
+		repaint();
 	}
-	
-	
-	
+
+
+
 	private void senerio_1(MenuItem senerio_1) {
 		senerio_1.addActionListener(new ActionListener() {
 
@@ -287,7 +287,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 		});				
 	}
 
-	
+
 	private void run_manual(MenuItem run_manual) {
 		run_manual.addActionListener(new ActionListener() {
 
@@ -307,37 +307,70 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
-				while(game.getElements().fruits_left()){
-					Path path = Algorithm.run(game);
-					for(LatLonAlt point : path.getPoints()){
-						boolean arrived = false;
-						while(!arrived){
-							Point p = game.getElements().get_me_location().to_pixels(getWidth(), getHeight());
-							pixel_location = get_pixel_location();
-							double angle = Cords.angXY(p.x-pixel_location.x, pixel_location.y-p.y);
-							play.rotate(angle);
+				if(game_status.equals("senerio_active")) {
+					LatLonAlt gps_location = null;
+					boolean found_fruit = false;
+					for(int i = 0; i < game.getElement_List().size() && !found_fruit; i++) {
+						if(game.getElement_List().get(i) instanceof Fruit) {
+							gps_location = game.getElement_List().get(i).getRatio().to_latLon(map);
+							found_fruit = true;
 						}
 					}
+					play.setInitLocation(gps_location.lat(),gps_location.lon());
+					play.start();
+					info = play.getStatistics();
+					System.out.println(info);
+					update_board_data();
+					repaint();
+//					game_status = "algo";
+
+					while(game.getElements().fruits_left() && time_left()){
+						Path path = Algorithm.run(game);
+						for(LatLonAlt gps_point : path.getPoints()){
+							boolean arrived = false;
+							while(!arrived){
+								Point p = new Ratio_Point(gps_point, map).to_pixels(getWidth(), getHeight());
+								move_game_pieces(p.x, p.y);
+								try {
+									Thread.sleep(35);
+								} catch (InterruptedException e1) {
+									e1.printStackTrace();
+								}
+								arrived = true;
+								for (Element element : game.getElement_List()) {
+									if(element instanceof Fruit && element.getRatio().to_latLon(map).equals(gps_point)) {
+										arrived = false;
+									}
+								}
+							}
+						}
+					}
+					game_status = "nothing";
+					info = play.getStatistics();
+					play.stop();
+					System.out.println("**** Game Over! ****\n" + "End game: " + info);
+					clear();
+					repaint();
 				}
 			}
 		});		
 	}
 
-	
+
 	public void paint(Graphics g){
 		g.drawImage(myImage, 0, 0,getWidth()-8,getHeight()-8, this);
 
 		try {
 			lock.lock();
-		for(Box box: game.getBox_List()) {
-			Point minPixels = box.getBottom_left().to_pixels(getWidth(), getHeight());
-			Point maxPixels = box.getTop_right().to_pixels(getWidth(), getHeight());
+			for(Box box: game.getBox_List()) {
+				Point minPixels = box.getBottom_left().to_pixels(getWidth(), getHeight());
+				Point maxPixels = box.getTop_right().to_pixels(getWidth(), getHeight());
 
-			g.setColor(Color.BLACK);
-			int rectWidth = maxPixels.x-minPixels.x;
-			int rectHeight = minPixels.y-maxPixels.y;
-			g.fillRect(minPixels.x, maxPixels.y, rectWidth, rectHeight);
-		}
+				g.setColor(Color.BLACK);
+				int rectWidth = maxPixels.x-minPixels.x;
+				int rectHeight = minPixels.y-maxPixels.y;
+				g.fillRect(minPixels.x, maxPixels.y, rectWidth, rectHeight);
+			}
 
 			for(Element element: game.getElement_List()) {
 				Point Pixels = element.getRatio().to_pixels(getWidth(), getHeight());
@@ -360,19 +393,14 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 	@Override
 	public void menuSelected(MenuEvent arg0) {
 	}
-	
+
 	@Override
 	public void mouseClicked(MouseEvent e) {
 
 		if(game_status.equals("run_game_manual")) {
 			Ratio_Point location = new Ratio_Point(new Point(e.getX(),e.getY()), getWidth(), getHeight());
-			boolean in_box = false;
-				for(Box box: game.getBox_List()) {
-					if(box.is_in_box(location))
-						in_box = true;
-				}
-			if(!in_box) {
-				Coords.LatLonAlt gps_location = location.to_latLon(map);
+			if(!game.getBoxes().is_in_boxes(location)) {
+				LatLonAlt gps_location = location.to_latLon(map);
 				play.setInitLocation(gps_location.lat(),gps_location.lon());
 				play.start();
 				info = play.getStatistics();
@@ -394,29 +422,13 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 
 	private void move_game_pieces(int x, int y) {
-		pixel_location = get_pixel_location();
+		pixel_location = game.getElements().get_me_location().to_pixels(getWidth(), getHeight());
 		double angle = Cords.angXY(x-pixel_location.x, pixel_location.y-y);
 		play.rotate(angle);
 		info = play.getStatistics();
 		System.out.println(info);
 		update_board_data();
 		repaint();		
-	}
-	
-	
-	private Point get_pixel_location() {
-		try {
-			lock.lock();
-			for(Element element: game.getElement_List()) {
-				if(element instanceof Me_player) {
-					Ratio_Point ratio = element.getRatio();
-					return ratio.to_pixels(getWidth(), getHeight());
-				}
-			}
-		} finally {
-			lock.unlock();
-		}
-		return null;
 	}
 
 

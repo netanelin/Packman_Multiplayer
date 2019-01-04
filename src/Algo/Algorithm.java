@@ -23,7 +23,6 @@ public class Algorithm {
         for(Element element : game.getElement_List())
             if(element instanceof Fruit){
                 //TODO write the diagstra algo
-                //האם יש קן ישיר לפרי
                Ratio_Segment seg = new Ratio_Segment( game.getElements().get_me_location(), element.getRatio());
                 if(!game.getBoxes().intersect(seg)){
                     LatLonAlt me = game.getElements().get_me_location().to_latLon(game.getMap());
@@ -34,7 +33,6 @@ public class Algorithm {
                         min_distance = me.distance2D(fruit);
                     }
                 }
-                //אין קו ישר אז בונים מסלול בעזרת דיאגסטרה
                 else{
                     ArrayList<LatLonAlt> graph_list = new ArrayList<>();
                     graph_list.add(game.getElements().get_me_location().to_latLon(game.getMap()));
@@ -42,8 +40,8 @@ public class Algorithm {
                     graph_list.add(element.getRatio().to_latLon(game.getMap()));
 
                     Graph G = new Graph();
-                    String source = "M";
-                    String target = "F";
+                    String source = "a";
+                    String target = "b";
                     G.add(new Node(source));
                     for(int i=1;i<graph_list.size()-1;i++) {
                         Node d = new Node("" + i);
@@ -55,11 +53,14 @@ public class Algorithm {
                         for (int j = i+1; j < graph_list.size(); j++){
                             if(clear_sight(graph_list.get(i), graph_list.get(j), game)){
                                 double dist = graph_list.get(i).distance2D(graph_list.get(j));
-                                if(i==0){
-                                    G.addEdge("M",""+j,dist);
+                                if(i==0 && j==graph_list.size()-1) {
+                                	G.addEdge("a","b",dist);
+                                }
+                                else if(i==0){
+                                    G.addEdge("a",""+j,dist);
                                 }
                                 else if(j==graph_list.size()-1) {
-                                    G.addEdge("" + i, "F", dist);
+                                    G.addEdge("" + i, "b", dist);
                                 }
                                 else{
                                     G.addEdge("" + i,""+j,dist);
@@ -67,6 +68,7 @@ public class Algorithm {
                             }
                         }
                     }
+                    System.out.println(G);
                     Graph_Algo.dijkstra(G, source);
                     Node b = G.getNodeByName(target);
                     if(b.getDist()<min_distance){
@@ -101,22 +103,22 @@ public class Algorithm {
             }
             if(!top_right_check) {
                 LatLonAlt corner1 = box_i.getTop_right().to_latLon(game.getMap());
-                LatLonAlt shifted_corner1 = corner1.tanstale(new Point3D(1, 1, 0));
+                LatLonAlt shifted_corner1 = corner1.tanstale(new Point3D(3, 3, 0));
                 uncontained_corners.add(shifted_corner1);
             }
             if(!top_left_check) {
                 LatLonAlt corner2 = box_i.getTop_right().to_latLon(game.getMap());
-                LatLonAlt shifted_corner2 = corner2.tanstale(new Point3D(1, -1, 0));
+                LatLonAlt shifted_corner2 = corner2.tanstale(new Point3D(3, -3, 0));
                 uncontained_corners.add(shifted_corner2);
             }
             if(!bottom_right_check){
                 LatLonAlt corner3 = box_i.getTop_right().to_latLon(game.getMap());
-                LatLonAlt shifted_corner3 = corner3.tanstale(new Point3D(-1, 1, 0));
+                LatLonAlt shifted_corner3 = corner3.tanstale(new Point3D(-3, 3, 0));
                 uncontained_corners.add(shifted_corner3);
             }
             if(!bottom_left_check){
                 LatLonAlt corner4 = box_i.getTop_right().to_latLon(game.getMap());
-                LatLonAlt shifted_corner4 = corner4.tanstale(new Point3D(-1, -1, 0));
+                LatLonAlt shifted_corner4 = corner4.tanstale(new Point3D(-3, -3, 0));
                 uncontained_corners.add(shifted_corner4);
             }
         }
