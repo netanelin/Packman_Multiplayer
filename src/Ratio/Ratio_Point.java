@@ -61,5 +61,9 @@ public class Ratio_Point {
 
 		return new Coords.LatLonAlt(new_lat, new_lon, 0);
     }
+    
+    public String toString() {
+    	return "x: " + X_Ratio + ", y: " + Y_Ratio;
+    }
 
 }

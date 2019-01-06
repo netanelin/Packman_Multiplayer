@@ -308,54 +308,77 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 			public void actionPerformed(ActionEvent arg0) {
 
 				if(game_status.equals("senerio_active")) {
-					LatLonAlt gps_location = null;
-					boolean found_fruit = false;
-					for(int i = 0; i < game.getElement_List().size() && !found_fruit; i++) {
-						if(game.getElement_List().get(i) instanceof Fruit) {
-							gps_location = game.getElement_List().get(i).getRatio().to_latLon(map);
-							found_fruit = true;
-						}
-					}
-					play.setInitLocation(gps_location.lat(),gps_location.lon());
-					play.start();
-					info = play.getStatistics();
-					System.out.println(info);
-					update_board_data();
-					repaint();
-//					game_status = "algo";
-
-					while(game.getElements().fruits_left() && time_left()){
-						Path path = Algorithm.run(game);
-						for(LatLonAlt gps_point : path.getPoints()){
-							boolean arrived = false;
-							while(!arrived){
-								Point p = new Ratio_Point(gps_point, map).to_pixels(getWidth(), getHeight());
-								move_game_pieces(p.x, p.y);
-								try {
-									Thread.sleep(35);
-								} catch (InterruptedException e1) {
-									e1.printStackTrace();
-								}
-								arrived = true;
-								for (Element element : game.getElement_List()) {
-									if(element instanceof Fruit && element.getRatio().to_latLon(map).equals(gps_point)) {
-										arrived = false;
-									}
-								}
-							}
-						}
-					}
-					game_status = "nothing";
-					info = play.getStatistics();
-					play.stop();
-					System.out.println("**** Game Over! ****\n" + "End game: " + info);
-					clear();
-					repaint();
+					game_status = "run_game_algo";
+					algo_Thread();
 				}
 			}
 		});		
 	}
 
+	
+	
+	
+	private void algo_Thread() {
+
+			new Thread() {
+				public void run() {
+						if(game_status.equals("run_game_algo")) {
+							LatLonAlt gps_location = null;
+							boolean found_fruit = false;
+							for(int i = 0; i < game.getElement_List().size() && !found_fruit; i++) {
+								if(game.getElement_List().get(i) instanceof Fruit) {
+									gps_location = game.getElement_List().get(i).getRatio().to_latLon(map);
+									found_fruit = true;
+								}
+							}
+							play.setInitLocation(gps_location.lat(),gps_location.lon());
+							play.start();
+							info = play.getStatistics();
+							System.out.println(info);
+							update_board_data();
+							repaint();
+
+							while(game.getElements().fruits_left() && time_left()){
+								Path path = Algorithm.run(game);
+								for(LatLonAlt gps_point : path.getPoints()){
+									boolean arrived = false;
+									while(!arrived && game.getElements().fruits_left() && time_left()){
+										Point p = new Ratio_Point(gps_point, map).to_pixels(getWidth(), getHeight());
+										move_game_pieces(p.x, p.y);
+										try {
+											Thread.sleep(35);
+										} catch (InterruptedException e1) {
+											e1.printStackTrace();
+										}
+										if(gps_point.GPS_distance(game.getElements().get_me_location().to_latLon(map))<=1)
+											arrived = true;
+									}
+								}
+							}
+							try {
+								lock.lock();
+								move_game_pieces(0, 0);
+							} finally {
+								lock.unlock();
+							}
+								game_status = "nothing";
+								info = play.getStatistics();
+								play.stop();
+								System.out.println("**** Game Over! ****\n" + "End game: " + info);
+								clear();
+								repaint();
+						}
+				}
+			}.start();
+		}
+	
+	
+	
+	
+	
+	
+	
+	
 
 	public void paint(Graphics g){
 		g.drawImage(myImage, 0, 0,getWidth()-8,getHeight()-8, this);
@@ -447,7 +470,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 	public void mousePressed(MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON1) {
 			mouseDown = true;
-			initThread(e.getX(),e.getY());
+			manual_Thread(e.getX(),e.getY());
 		}
 	}
 
@@ -463,7 +486,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 		isRunning = true;
 		return true;
 	}
-	private void initThread(int x, int y) {
+	private void manual_Thread(int x, int y) {
 		if (checkAndMark()) {
 			new Thread() {
 				public void run() {
@@ -478,7 +501,12 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 								}
 							}
 							else {
-								move_game_pieces(x, y);
+								try {
+									lock.lock();
+									move_game_pieces(x, y);
+								} finally {
+									lock.unlock();
+								}
 								game_status = "nothing";
 								info = play.getStatistics();
 								play.stop();

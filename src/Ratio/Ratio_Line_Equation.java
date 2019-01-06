@@ -22,7 +22,7 @@ public class Ratio_Line_Equation {
 	public Ratio_Point intersection_point(Ratio_Line_Equation ot) {
 		
 		double x = (ot.n-n) / (m-ot.m);
-		double  y = m*x+n;
+		double y = m*x+n;
 		
 		return new Ratio_Point(x, y);
 	}

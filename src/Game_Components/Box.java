@@ -7,19 +7,20 @@ public class Box {
 
 	private Ratio_Point bottom_left;
 	private Ratio_Point top_right;
-private Ratio_Point bottom_right;
-private Ratio_Point top_left;
+	private Ratio_Point bottom_right;
+	private Ratio_Point top_left;
 
 	public Box(String line, Map map){
 		String[] data = line.split(",");
-    	Coords.LatLonAlt min = new Coords.LatLonAlt(Double.parseDouble(data[2]),Double.parseDouble(data[3]),0);
-    	Coords.LatLonAlt max = new Coords.LatLonAlt(Double.parseDouble(data[5]),Double.parseDouble(data[6]),0);
-    	
-    	bottom_left = new Ratio_Point(min, map);
+		Coords.LatLonAlt min = new Coords.LatLonAlt(Double.parseDouble(data[2]),Double.parseDouble(data[3]),0);
+		Coords.LatLonAlt max = new Coords.LatLonAlt(Double.parseDouble(data[5]),Double.parseDouble(data[6]),0);
+
+		bottom_left = new Ratio_Point(min, map);
 		top_right = new Ratio_Point(max, map);
 
-		bottom_right = new Ratio_Point(top_right.getX_Ratio(), this.bottom_left.getY_Ratio());
-		top_left = new Ratio_Point(this.bottom_left.getX_Ratio(), top_right.getY_Ratio());
+		bottom_right = new Ratio_Point(top_right.getX_Ratio(), bottom_left.getY_Ratio());
+		top_left = new Ratio_Point(bottom_left.getX_Ratio(), top_right.getY_Ratio());
+		
 	}
 
 	public Ratio_Point getBottom_left() {
@@ -50,16 +51,16 @@ private Ratio_Point top_left;
 		return ratio.getX_Ratio()>= bottom_left.getX_Ratio() &&
 				ratio.getX_Ratio()<= top_right.getX_Ratio() &&
 				ratio.getY_Ratio()<= bottom_left.getY_Ratio() &&
-						ratio.getY_Ratio()>= top_right.getY_Ratio();
+				ratio.getY_Ratio()>= top_right.getY_Ratio();
 	}
-	
+
 	public boolean intersect(Ratio_Segment seg) {
-		
+
 		Ratio_Segment bottom = new Ratio_Segment(bottom_left, bottom_right);
 		Ratio_Segment top = new Ratio_Segment(top_left, top_right);
 		Ratio_Segment right = new Ratio_Segment(bottom_right, top_right);
 		Ratio_Segment left = new Ratio_Segment(bottom_left, top_left);
-		
+
 		return seg.intersect(bottom) || seg.intersect(top) || seg.intersect(right) || seg.intersect(left);
 	}
 }
