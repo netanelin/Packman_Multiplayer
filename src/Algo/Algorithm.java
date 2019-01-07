@@ -110,44 +110,7 @@ public class Algorithm {
 			LatLonAlt shifted_corner4 = corner4.tanstale(new Point3D(-2, -2, 0));
 			if(!game.getBoxes().is_in_boxes(new Ratio_Point(shifted_corner4, game.getMap()))) {
 				uncontained_corners.add(shifted_corner4);
-			}
-			
-//			boolean top_right_check = false;
-//			boolean top_left_check = false;
-//			boolean bottom_right_check = false;
-//			boolean bottom_left_check = false;
-//			for (Box box_j: game.getBox_List()) {
-//				if(box_i!=box_j) {
-//					if(box_j.is_in_box(box_i.getTop_right()))
-//						top_right_check = true;
-//					if(box_j.is_in_box(box_i.getTop_left()))
-//						top_left_check = true;
-//					if(box_j.is_in_box(box_i.getBottom_right()))
-//						bottom_right_check = true;
-//					if(box_j.is_in_box(box_i.getBottom_left()))
-//						bottom_left_check = true;
-//				}
-//			}
-//			if(!top_right_check) {
-//				LatLonAlt corner1 = box_i.getTop_right().to_latLon(game.getMap());
-//				LatLonAlt shifted_corner1 = corner1.tanstale(new Point3D(3, 3, 0));
-//				uncontained_corners.add(shifted_corner1);
-//			}
-//			if(!top_left_check) {
-//				LatLonAlt corner2 = box_i.getTop_right().to_latLon(game.getMap());
-//				LatLonAlt shifted_corner2 = corner2.tanstale(new Point3D(3, -3, 0));
-//				uncontained_corners.add(shifted_corner2);
-//			}
-//			if(!bottom_right_check){
-//				LatLonAlt corner3 = box_i.getTop_right().to_latLon(game.getMap());
-//				LatLonAlt shifted_corner3 = corner3.tanstale(new Point3D(-3, 3, 0));
-//				uncontained_corners.add(shifted_corner3);
-//			}
-//			if(!bottom_left_check){
-//				LatLonAlt corner4 = box_i.getTop_right().to_latLon(game.getMap());
-//				LatLonAlt shifted_corner4 = corner4.tanstale(new Point3D(-3, -3, 0));
-//				uncontained_corners.add(shifted_corner4);
-//			}
+			}	
 		}
 		return uncontained_corners;
 	}

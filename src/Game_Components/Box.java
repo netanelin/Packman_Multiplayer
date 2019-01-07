@@ -23,6 +23,14 @@ public class Box {
 		
 	}
 
+	public Box(Ratio_Point min, Ratio_Point max) {
+		bottom_left = new Ratio_Point(min);
+		top_right = new Ratio_Point(max);
+		
+		bottom_right = new Ratio_Point(top_right.getX_Ratio(), bottom_left.getY_Ratio());
+		top_left = new Ratio_Point(bottom_left.getX_Ratio(), top_right.getY_Ratio());
+	}
+	
 	public Ratio_Point getBottom_left() {
 		return bottom_left;
 	}

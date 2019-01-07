@@ -134,9 +134,14 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				clear();
-				repaint();
-				game_status = "nothing";
+				try {
+					lock.lock();
+					game_status = "nothing";
+					clear();
+					repaint();
+				} finally {
+					lock.unlock();
+				}	
 			}
 		});		
 	}
@@ -315,70 +320,83 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 		});		
 	}
 
-	
-	
-	
+
+
+
 	private void algo_Thread() {
 
-			new Thread() {
-				public void run() {
-						if(game_status.equals("run_game_algo")) {
-							LatLonAlt gps_location = null;
-							boolean found_fruit = false;
-							for(int i = 0; i < game.getElement_List().size() && !found_fruit; i++) {
-								if(game.getElement_List().get(i) instanceof Fruit) {
-									gps_location = game.getElement_List().get(i).getRatio().to_latLon(map);
-									found_fruit = true;
-								}
-							}
-							play.setInitLocation(gps_location.lat(),gps_location.lon());
-							play.start();
-							info = play.getStatistics();
-							System.out.println(info);
-							update_board_data();
-							repaint();
-
-							while(game.getElements().fruits_left() && time_left()){
-								Path path = Algorithm.run(game);
-								for(LatLonAlt gps_point : path.getPoints()){
-									boolean arrived = false;
-									while(!arrived && game.getElements().fruits_left() && time_left()){
-										Point p = new Ratio_Point(gps_point, map).to_pixels(getWidth(), getHeight());
-										move_game_pieces(p.x, p.y);
-										try {
-											Thread.sleep(35);
-										} catch (InterruptedException e1) {
-											e1.printStackTrace();
-										}
-										if(gps_point.GPS_distance(game.getElements().get_me_location().to_latLon(map))<=1)
-											arrived = true;
-									}
-								}
-							}
-							try {
-								lock.lock();
-								move_game_pieces(0, 0);
-							} finally {
-								lock.unlock();
-							}
-								game_status = "nothing";
-								info = play.getStatistics();
-								play.stop();
-								System.out.println("**** Game Over! ****\n" + "End game: " + info);
-								clear();
-								repaint();
+		new Thread() {
+			public void run() {
+				if(game_status.equals("run_game_algo")) {
+					LatLonAlt gps_location = null;
+					boolean found_fruit = false;
+					for(int i = 0; i < game.getElement_List().size() && !found_fruit; i++) {
+						if(game.getElement_List().get(i) instanceof Fruit) {
+							gps_location = game.getElement_List().get(i).getRatio().to_latLon(map);
+							found_fruit = true;
 						}
+					}
+					play.setInitLocation(gps_location.lat(),gps_location.lon());
+					play.start();
+					info = play.getStatistics();
+					System.out.println(info);
+					update_board_data();
+					repaint();
+
+					while(game_status.equals("run_game_algo") && game.getElements().fruits_left() && time_left()){
+						Path path = Algorithm.run(game);
+						for(LatLonAlt gps_point : path.getPoints()){
+							boolean arrived = false;
+							while(game_status.equals("run_game_algo") &&
+									!arrived && game.getElements().fruits_left() && time_left()){
+								Point p = new Ratio_Point(gps_point, map).to_pixels(getWidth(), getHeight());
+								move_game_pieces(p.x, p.y);
+								try {
+									Thread.sleep(35);
+								} catch (InterruptedException e1) {
+									e1.printStackTrace();
+								}
+								if(game_status.equals("run_game_algo") &&
+										gps_point.GPS_distance(game.getElements().get_me_location().to_latLon(map))<=1) {
+//										&& fruit_still_exist(path.getPoints().get(path.getPoints().size()-1))) {
+									arrived = true;
+								}
+							}
+						}
+					}
+					if(game_status.equals("run_game_algo")) {
+						try {
+							lock.lock();
+							move_game_pieces(0, 0);
+						} finally {
+							lock.unlock();
+						}
+						game_status = "nothing";
+						info = play.getStatistics();
+						play.stop();
+						System.out.println("**** Game Over! ****\n" + "End game: " + info);
+						clear();
+						repaint();
+					}
 				}
-			}.start();
-		}
-	
-	
-	
-	
-	
-	
-	
-	
+			}
+		}.start();
+	}
+
+
+//private boolean fruit_still_exist(LatLonAlt fruit_location) {
+//	for (Element element : game.getElement_List()) {
+////		System.out.println(element.getRatio().to_latLon(game.getMap())+"  "+fruit_location);
+//		LatLonAlt ele = element.getRatio().to_latLon(game.getMap());
+//		if(element instanceof Fruit && ele.lat()==fruit_location.lat() && 
+//				ele.lon()==fruit_location.lon()&&
+//				ele.alt()==fruit_location.alt()) {
+//			return true;
+//		}
+//	}
+//	return false;
+//}
+
 
 	public void paint(Graphics g){
 		g.drawImage(myImage, 0, 0,getWidth()-8,getHeight()-8, this);
