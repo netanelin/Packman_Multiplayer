@@ -10,9 +10,17 @@ import graph.Graph_Algo;
 import graph.Node;
 
 import java.util.ArrayList;
-
+/**
+ * This class has a static method that calculates the shortest path to the next fruit.
+ * @author Eitan Lichtman, Netanel Indik
+ */
 public class Algorithm {
-
+	
+	/**
+	 * Calculates the shortest path to the next fruit using dijkstra algorithm and returns the path.
+	 * @param game
+	 * @return Path
+	 */
 	public static Path run(Game game){
 
 		Fruit closest_fruit = null;
@@ -83,6 +91,11 @@ public class Algorithm {
 		return shortest_path;
 	}
 
+	/**
+	 * Returns an ArrayList of LatLonAlt points that represent the box corners shifted a little.
+	 * @param game
+	 * @return ArrayList<LatLonAlt> shifted_corners
+	 */
 	private static ArrayList<LatLonAlt> shifted_corners(Game game){
 
 		ArrayList<LatLonAlt> uncontained_corners = new ArrayList<>();
@@ -115,6 +128,13 @@ public class Algorithm {
 		return uncontained_corners;
 	}
 
+	/**
+	 * Returns true iff there's a clear sight between the two LatLonAlt points.
+	 * @param p1
+	 * @param p2
+	 * @param game
+	 * @return true iff there's a clear sight between the two LatLonAlt points
+	 */
 	private static boolean clear_sight(LatLonAlt p1, LatLonAlt p2, Game game){
 		Ratio_Point rp1 = new Ratio_Point(p1,game.getMap());
 		Ratio_Point rp2 = new Ratio_Point(p2,game.getMap());

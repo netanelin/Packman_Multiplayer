@@ -3,6 +3,10 @@ package Game_Components;
 import Ratio.Ratio_Segment;
 import Ratio.Ratio_Point;
 
+/**
+ * This class represents a black box with Ratio_point coordinates.
+ * @author Eitan Lichtman, Netanel Indik
+ */
 public class Box {
 
 	private Ratio_Point bottom_left;
@@ -10,6 +14,11 @@ public class Box {
 	private Ratio_Point bottom_right;
 	private Ratio_Point top_left;
 
+	/**
+	 * Initiates Box by line given from csv and map.
+	 * @param line
+	 * @param map
+	 */
 	public Box(String line, Map map){
 		String[] data = line.split(",");
 		Coords.LatLonAlt min = new Coords.LatLonAlt(Double.parseDouble(data[2]),Double.parseDouble(data[3]),0);
@@ -23,6 +32,11 @@ public class Box {
 		
 	}
 
+	/**
+	 * Initiates Box by given min and max Ratio_points
+	 * @param min
+	 * @param max
+	 */
 	public Box(Ratio_Point min, Ratio_Point max) {
 		bottom_left = new Ratio_Point(min);
 		top_right = new Ratio_Point(max);
@@ -55,6 +69,10 @@ public class Box {
 		this.top_right = top_right;
 	}
 
+	/**
+	 * @param ratio
+	 * @return true iff a given Ratio_Point is in our Box.
+	 */
 	public boolean is_in_box(Ratio_Point ratio) {
 		return ratio.getX_Ratio()>= bottom_left.getX_Ratio() &&
 				ratio.getX_Ratio()<= top_right.getX_Ratio() &&
@@ -62,6 +80,10 @@ public class Box {
 				ratio.getY_Ratio()>= top_right.getY_Ratio();
 	}
 
+	/**
+	 * @param seg
+	 * @return true iff a given segment intersects with our Box.
+	 */
 	public boolean intersect(Ratio_Segment seg) {
 
 		Ratio_Segment bottom = new Ratio_Segment(bottom_left, bottom_right);
