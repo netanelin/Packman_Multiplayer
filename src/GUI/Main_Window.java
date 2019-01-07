@@ -352,13 +352,12 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 								Point p = new Ratio_Point(gps_point, map).to_pixels(getWidth(), getHeight());
 								move_game_pieces(p.x, p.y);
 								try {
-									Thread.sleep(35);
+									Thread.sleep(20);
 								} catch (InterruptedException e1) {
 									e1.printStackTrace();
 								}
 								if(game_status.equals("run_game_algo") &&
-										gps_point.GPS_distance(game.getElements().get_me_location().to_latLon(map))<=1) {
-//										&& fruit_still_exist(path.getPoints().get(path.getPoints().size()-1))) {
+										gps_point.GPS_distance(game.getElements().get_me_location().to_latLon(map))<=2) {
 									arrived = true;
 								}
 							}
@@ -382,20 +381,6 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 			}
 		}.start();
 	}
-
-
-//private boolean fruit_still_exist(LatLonAlt fruit_location) {
-//	for (Element element : game.getElement_List()) {
-////		System.out.println(element.getRatio().to_latLon(game.getMap())+"  "+fruit_location);
-//		LatLonAlt ele = element.getRatio().to_latLon(game.getMap());
-//		if(element instanceof Fruit && ele.lat()==fruit_location.lat() && 
-//				ele.lon()==fruit_location.lon()&&
-//				ele.alt()==fruit_location.alt()) {
-//			return true;
-//		}
-//	}
-//	return false;
-//}
 
 
 	public void paint(Graphics g){
