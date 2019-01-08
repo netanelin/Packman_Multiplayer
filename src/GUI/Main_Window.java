@@ -45,6 +45,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 	private String info;
 	private Point pixel_location;
 	private final Lock lock = new ReentrantLock();
+	private DB_connect dbc = null;
 
 	public Main_Window() 
 	{
@@ -63,6 +64,9 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 		board_data = new ArrayList<String>();
 		pixel_location = new Point();
 		info = new String();
+		dbc = new DB_connect();
+		dbc.setMyId(205463920);
+		dbc.setMyId2(311300784);
 	}
 
 
@@ -200,6 +204,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				senerio_update("data//Ex4_OOP_example1.csv");
+				dbc.setGameHash(2128259830);
 			}
 		});		
 	}
@@ -211,6 +216,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				senerio_update("data//Ex4_OOP_example2.csv");
+				dbc.setGameHash(1149748017);
 			}			
 		});				
 	}
@@ -222,6 +228,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				senerio_update("data//Ex4_OOP_example3.csv");
+				dbc.setGameHash(-683317070);
 			}
 		});				
 	}
@@ -233,6 +240,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				senerio_update("data//Ex4_OOP_example4.csv");
+				dbc.setGameHash(1193961129);
 			}
 		});				
 	}
@@ -244,6 +252,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				senerio_update("data//Ex4_OOP_example5.csv");
+				dbc.setGameHash(1577914705);
 			}
 		});				
 	}
@@ -255,6 +264,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				senerio_update("data//Ex4_OOP_example6.csv");
+				dbc.setGameHash(-1315066918);
 			}
 		});				
 	}
@@ -266,6 +276,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				senerio_update("data//Ex4_OOP_example7.csv");
+				dbc.setGameHash(-1377331871);
 			}
 		});				
 	}
@@ -277,6 +288,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				senerio_update("data//Ex4_OOP_example8.csv");
+				dbc.setGameHash(552196504);
 			}
 		});				
 	}
@@ -288,6 +300,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				senerio_update("data//Ex4_OOP_example9.csv");
+				dbc.setGameHash(919248096);
 			}
 		});				
 	}
@@ -323,19 +336,51 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 
 
+	private LatLonAlt find_best_init_location() {
+		LatLonAlt best_location = null;
+		
+		if(!game.getElements().contains_packmans()) {
+			boolean found_fruit = false;
+			for(int i = game.getElement_List().size()-1; i > 0 && !found_fruit; i++) {
+				if(game.getElement_List().get(i) instanceof Fruit) {
+					best_location = game.getElement_List().get(i).getRatio().to_latLon(map);
+					found_fruit = true;
+				}
+			}
+		}
+		else {
+			LatLonAlt fruit_location = null;
+			LatLonAlt packman_location = null;
+
+			double best_dist = Double.MIN_VALUE;
+
+			for (Element element1 : game.getElement_List()) {
+				if(element1 instanceof Fruit) {
+					for (Element element2 : game.getElement_List()) {
+						if(element2 instanceof Packman) {
+							fruit_location = element1.getRatio().to_latLon(game.getMap());
+							packman_location = element2.getRatio().to_latLon(game.getMap());
+							if(fruit_location.GPS_distance(packman_location)>best_dist) {
+								best_location = fruit_location;
+								best_dist = fruit_location.GPS_distance(packman_location);
+							}
+						}
+					}
+				}
+			}
+		}
+		return best_location;
+	}
+
+
+
+
 	private void algo_Thread() {
 
 		new Thread() {
 			public void run() {
 				if(game_status.equals("run_game_algo")) {
-					LatLonAlt gps_location = null;
-					boolean found_fruit = false;
-					for(int i = 0; i < game.getElement_List().size() && !found_fruit; i++) {
-						if(game.getElement_List().get(i) instanceof Fruit) {
-							gps_location = game.getElement_List().get(i).getRatio().to_latLon(map);
-							found_fruit = true;
-						}
-					}
+					LatLonAlt gps_location = find_best_init_location();
 					play.setInitLocation(gps_location.lat(),gps_location.lon());
 					play.start();
 					info = play.getStatistics();
@@ -343,46 +388,66 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 					update_board_data();
 					repaint();
 
-					while(game_status.equals("run_game_algo") && game.getElements().fruits_left() && time_left()){
+					while(game_status.equals("run_game_algo") && game.fruits_left() && time_left()){
 						Path path = Algorithm.run(game);
 						for(LatLonAlt gps_point : path.getPoints()){
 							boolean arrived = false;
 							while(game_status.equals("run_game_algo") &&
-									!arrived && game.getElements().fruits_left() && time_left()){
+									!arrived && game.fruits_left() && time_left()){
 								Point p = new Ratio_Point(gps_point, map).to_pixels(getWidth(), getHeight());
 								move_game_pieces(p.x, p.y);
 								try {
-									Thread.sleep(25);
+									Thread.sleep(30);
 								} catch (InterruptedException e1) {
 									e1.printStackTrace();
 								}
-								if(game_status.equals("run_game_algo") &&
-										gps_point.GPS_distance(game.getElements().get_me_location().to_latLon(map))<=2) {
+								if((game_status.equals("run_game_algo") &&
+										gps_point.GPS_distance(game.get_me_location().to_latLon(map))<=2)
+										|| !fruit_exists(path.getPoints().get(path.getPoints().size()-1))){
 									arrived = true;
 								}
 							}
+							if(!fruit_exists(path.getPoints().get(path.getPoints().size()-1)))
+								break;
 						}
 					}
 					if(game_status.equals("run_game_algo")) {
 						game_status = "nothing";
 						try {
 							lock.lock();
-						if(time_left())
-							move_game_pieces(0, 0);
+							if(time_left())
+								move_game_pieces(0, 0);
+							info = play.getStatistics();
+							play.stop();
+							System.out.println("**** Game Over! ****\n" + "End game: " + info);
+							dbc.setScore(get_score());
+							int rank = dbc.rank();
+							System.out.println("Score: " + dbc.getScore() + ", Rank: " + rank);
+							clear();
+							repaint();
 						} finally {
 							lock.unlock();
 						}
-						info = play.getStatistics();
-						play.stop();
-						System.out.println("**** Game Over! ****\n" + "End game: " + info);
-						clear();
-						repaint();
 					}
 				}
 			}
 		}.start();
 	}
 
+
+	private double get_score() {
+		String[] data = info.split(",");
+		return Double.parseDouble(data[2].substring(6));
+	}
+
+
+	private boolean fruit_exists(LatLonAlt next_fruit) {
+		for (Element element : game.getElement_List()) {
+			if(element instanceof Fruit && element.getRatio().to_latLon(game.getMap()).equals(next_fruit))
+				return true;
+		}
+		return false;
+	}
 
 	public void paint(Graphics g){
 		g.drawImage(myImage, 0, 0,getWidth()-8,getHeight()-8, this);
@@ -449,7 +514,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 
 
 	private void move_game_pieces(int x, int y) {
-		pixel_location = game.getElements().get_me_location().to_pixels(getWidth(), getHeight());
+		pixel_location = game.get_me_location().to_pixels(getWidth(), getHeight());
 		double angle = Cords.angXY(x-pixel_location.x, pixel_location.y-y);
 		play.rotate(angle);
 		info = play.getStatistics();
@@ -496,10 +561,10 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 				public void run() {
 					do {
 						if(game_status.equals("location_initiated")) {
-							if(game.getElements().fruits_left() && time_left()) {
+							if(game.fruits_left() && time_left()) {
 								move_game_pieces(x, y);
 								try {
-									Thread.sleep(35);
+									Thread.sleep(30);
 								} catch (InterruptedException e1) {
 									e1.printStackTrace();
 								}
@@ -515,6 +580,9 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 								info = play.getStatistics();
 								play.stop();
 								System.out.println("**** Game Over! ****\n" + "End game: " + info);
+								dbc.setScore(get_score());
+								int rank = dbc.rank();
+								System.out.println("Score: " + dbc.getScore() + ", Rank: " + rank);
 								clear();
 								repaint();
 							}

@@ -31,7 +31,6 @@ public class Algorithm {
 			if(element instanceof Fruit){
 				Ratio_Segment seg = new Ratio_Segment(game.getElements().get_me_location(), element.getRatio());
 				if(!game.getBoxes().intersect(seg)){
-					System.out.println("straight to fruit");
 					LatLonAlt me = game.getElements().get_me_location().to_latLon(game.getMap());
 					LatLonAlt fruit = element.getRatio().to_latLon(game.getMap());
 					if(me.GPS_distance(fruit)<min_distance){
@@ -87,7 +86,11 @@ public class Algorithm {
 		}
 		return shortest_path;
 	}
-
+	
+	
+	
+	//********************private data and methods********************
+	
 	/**
 	 * Returns an ArrayList of LatLonAlt points that represent the box corners shifted a little.
 	 * @param game

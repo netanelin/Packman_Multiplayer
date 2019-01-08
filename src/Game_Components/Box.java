@@ -4,15 +4,10 @@ import Ratio.Ratio_Segment;
 import Ratio.Ratio_Point;
 
 /**
- * This class represents a black box with Ratio_point coordinates.
+ * This class represents a black box with bottom_left, top_right, bottom_right, top_left Ratio_point coordinates.
  * @author Eitan Lichtman, Netanel Indik
  */
 public class Box {
-
-	private Ratio_Point bottom_left;
-	private Ratio_Point top_right;
-	private Ratio_Point bottom_right;
-	private Ratio_Point top_left;
 
 	/**
 	 * Initiates Box by line given from csv and map.
@@ -93,4 +88,14 @@ public class Box {
 
 		return seg.intersect(bottom) || seg.intersect(top) || seg.intersect(right) || seg.intersect(left);
 	}
+	
+	
+	
+	//********************private data and methods********************
+
+	private Ratio_Point bottom_left;
+	private Ratio_Point top_right;
+	private Ratio_Point bottom_right;
+	private Ratio_Point top_left;
+	
 }

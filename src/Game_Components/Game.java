@@ -2,6 +2,8 @@ package Game_Components;
 
 import java.util.ArrayList;
 
+import Ratio.Ratio_Point;
+
 public class Game {
 
 	private Map map;
@@ -65,6 +67,11 @@ public class Game {
 		return boxes;
 	}
 
+	public boolean fruits_left() {
+		return elements.fruits_left();
+	}
 	
-	
+	public Ratio_Point get_me_location(){
+		return elements.get_me_location();
+	}
 }

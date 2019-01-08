@@ -16,7 +16,7 @@ public class GUI_Main
 	{
 		Main_Window window = new Main_Window();
 		window.setVisible(true);
-		window.setSize(window.myImage.getWidth()-8,window.myImage.getHeight()-8);
+		window.setSize(window.myImage.getWidth()-10,window.myImage.getHeight()-10);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 }

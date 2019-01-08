@@ -10,8 +10,6 @@ import Coords.LatLonAlt;
  */
 public class Path {
 
-	private ArrayList<LatLonAlt> points;
-
 	/**
 	 * Initiates path from given ArrayLists of graph nodes and LatLonAlt points.
 	 * @param nodes
@@ -43,4 +41,11 @@ public class Path {
 	public ArrayList<LatLonAlt> getPoints() {
 		return points;
 	}
+	
+	
+	
+	//********************private data and methods********************
+
+	private ArrayList<LatLonAlt> points;
+
 }
