@@ -75,11 +75,8 @@ public class Algorithm {
 							}
 						}
 					}
-					System.out.println(G);
 					Graph_Algo.dijkstra(G, source);
-					System.out.println(G);
 					Node b = G.getNodeByName(target);
-					System.out.println(b);
 					if(b.getDist()<min_distance){
 						closest_fruit = (Fruit)element;
 						shortest_path = new Path(b.getPath(), graph_list);

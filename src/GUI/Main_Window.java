@@ -352,7 +352,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 								Point p = new Ratio_Point(gps_point, map).to_pixels(getWidth(), getHeight());
 								move_game_pieces(p.x, p.y);
 								try {
-									Thread.sleep(20);
+									Thread.sleep(25);
 								} catch (InterruptedException e1) {
 									e1.printStackTrace();
 								}
@@ -364,13 +364,14 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 						}
 					}
 					if(game_status.equals("run_game_algo")) {
+						game_status = "nothing";
 						try {
 							lock.lock();
+						if(time_left())
 							move_game_pieces(0, 0);
 						} finally {
 							lock.unlock();
 						}
-						game_status = "nothing";
 						info = play.getStatistics();
 						play.stop();
 						System.out.println("**** Game Over! ****\n" + "End game: " + info);
