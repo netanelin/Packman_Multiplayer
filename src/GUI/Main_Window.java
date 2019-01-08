@@ -339,7 +339,7 @@ public class Main_Window extends JFrame implements MouseListener, MenuListener {
 	private LatLonAlt find_best_init_location() {
 		LatLonAlt best_location = null;
 		
-		if(!game.getElements().contains_packmans()) {
+		if(!game.contains_packmans()) {
 			boolean found_fruit = false;
 			for(int i = game.getElement_List().size()-1; i > 0 && !found_fruit; i++) {
 				if(game.getElement_List().get(i) instanceof Fruit) {
