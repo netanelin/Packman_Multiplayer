@@ -3,17 +3,21 @@ package Game_Components;
 import Coords.LatLonAlt;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * This class represents a map, with min and max LatLonAlt location points and map Image.
+ * @author Eitan Lichtman, Netanel Indik
+ */
 public class Map {
-
-	private BufferedImage myImage;
-    private LatLonAlt min;
-    private LatLonAlt max;
-
+	
+	/**
+	 * Initiates the map Image, min max LatLonAlt points by given coordinates.
+	 * @param min
+	 * @param max
+	 */
     public Map(LatLonAlt min, LatLonAlt max){
         try {
             myImage = ImageIO.read(new File("Images\\ariel_university.jpg"));
@@ -23,13 +27,8 @@ public class Map {
         this.min = new LatLonAlt(min);
         this.max = new LatLonAlt(max);
     }
-    
-    public Map(Map ot) {
-    	min = new LatLonAlt(ot.min);
-    	max = new LatLonAlt(max);
-    	myImage = ot.myImage;
-    }
 
+    
     public LatLonAlt getMin() {
         return min;
     }
@@ -42,5 +41,11 @@ public class Map {
 		return myImage;
 	}
     
-    
+	
+	
+	//********************private data and methods********************
+
+	private BufferedImage myImage;
+    private LatLonAlt min;
+    private LatLonAlt max;
 }

@@ -9,14 +9,13 @@ import javax.imageio.ImageIO;
 import Ratio.Ratio_Point;
 
 /**
- * This class represents a single fruit with a Ratio_point location and BufferedImage.
+ * This class represents a single fruit with a Ratio_point location and Image.
  * @author Eitan Lichtman, Netanel Indik
- *
  */
 public class Fruit implements Element{
 
 	/**
-	 * Initiates the fruit by a given line from csv file.
+	 * Initiates the fruit by a given line from a csv file and a given map.
 	 * @param line
 	 * @param map
 	 */
