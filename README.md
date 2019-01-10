@@ -1,6 +1,5 @@
 # Packman_Multiplayer
 
-**Welcome to the Packman_Multiplayer wiki!**
 
 **By Eitan Lichtman & Netanel Indik**
 
