@@ -9,7 +9,7 @@ This project is a packman game with 9 different senerios and multiple components
 
 ***
 
-**Game Components:**
+**GAME COMPONENTS**
 
 > Player
 
@@ -21,7 +21,7 @@ The goal of the player is to eat all of the fruit as fast as possible without ru
 
 > GameBoard Map
 
-The GameBoard backgroung is a map of Ariel university in Samaria Israel, which is the university that we are currently studying in and where this project was given to us as a task.
+The GameBoard backgroung is a map of Ariel university in Samaria Israel, which is the university that we are currently studying in and where this project was given to us as a task. The locations are translated from lat lon coordinates to image pixels.
 
 The player cannot leave the borders of the map, if it tries to leave 1 point is reduced for every attempt.
 
@@ -30,7 +30,7 @@ The player cannot leave the borders of the map, if it tries to leave 1 point is 
 
 > Black Boxes
 
-The black boxes are also static like the fruit and do not move.
+The black boxes are static and do not move.
 
 The player cannot walk in to boxes, if it tries to touch a box 1 point is reduced for every attempt.
 
@@ -63,3 +63,32 @@ Every fruit eaten by the player adds 1 point, and if all of the fruit are eaten 
 
 ![](https://github.com/netanelin/Packman_Multiplayer/blob/master/Images%20for%20wiki/fruits.png)
 
+
+***
+
+**MENU OPTIONS**
+
+> Choose Senerio
+
+This option allows you to choose 1 out of 9 game senerios to activate.
+
+![](https://github.com/netanelin/Packman_Multiplayer/blob/master/Images%20for%20wiki/senerio.png)
+
+Once a senerio is chosen the program will draw the components on the gameboard in the correct places.
+For example if senerio_5 was chosen this is what the gameBoard would look like:
+
+![](https://github.com/netanelin/Packman_Multiplayer/blob/master/Images%20for%20wiki/senerio_5.png)
+
+
+> Run Manual
+
+After Run Manual is activated, the first click initiates our players location and then every time the mouse is pressed down our player moves towards the mouse and all packmans & ghosts move according to their algorithm. When the mouse is released the whole game stops moving. Whenever there are no more fruits left or the time runs out the game stops and the board is cleared, the results are written on the console.
+
+![](https://github.com/netanelin/Packman_Multiplayer/blob/master/Images%20for%20wiki/run_manual.png)
+
+
+> Run Algorithm
+
+If Run Algorithm is activated, immediately the player is initiated and starts running through the game eating the fruit by using our algorithm which finds the closest fruit to players location, when the distanse is defined as follows: if there are no boxes in the way we take the actual distanse (in meters) between the player and the fruit. If there are boxes blocking the fruit we travel on the box corners until we can go straight to the fruit and that whole path is the distance.
+
+![](https://github.com/netanelin/Packman_Multiplayer/blob/master/Images%20for%20wiki/run_algo.png)
