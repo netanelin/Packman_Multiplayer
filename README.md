@@ -91,3 +91,9 @@ After Run Manual is activated, the first click initiates our players location an
 If Run Algorithm is activated, immediately the player is initiated and starts running through the game eating the fruit by using our algorithm which finds the closest fruit to players location, when the distanse is defined as follows: If there are no boxes in the way we take the actual distanse (in meters) between the player and the fruit. If there are boxes blocking the fruit we travel near the box corners until we can go straight to the fruit and that whole path is the distance.
 
 ![](https://github.com/netanelin/Packman_Multiplayer/blob/master/Images%20for%20wiki/run_algo.png)
+
+> Clear
+
+This gives you an option to clear the board at any given time.
+
+![](https://github.com/netanelin/Packman_Multiplayer/blob/master/Images%20for%20wiki/clear.png)
